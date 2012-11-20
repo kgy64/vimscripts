@@ -1,14 +1,56 @@
 #!/bin/bash
 #
 
-mkdir -p $HOME/bin/vim
-cp bin/* $HOME/bin/vim
+function copied()
+{
+ echo "- Copied:  ${1}"
+}
 
-mkdir -p $HOME/.vim/plugin
-cp plugin/* $HOME/.vim/plugin
+function not_copied()
+{
+ echo "- Skipped: ${1}"
+}
 
-cp vimrc $HOME/.vimrc
-cp gvimrc $HOME/.gvimrc
+function copy_one_file()
+{
+ local source="${1}"
+ local target="${2}"
+ local dest_dir="`dirname "$target"`"
+ local dest_file="`basename "$target"`"
+ # echo "<$source -> $dest_dir/$dest_file>"
+ test -e "$target" && diff -q "$source" "$target" >/dev/null 2>&1 && not_copied "$target" && return
+ local do_sudo
+ test "${3}" && do_sudo="sudo"
+ $do_sudo cp "$source" "$target" && copied "$target"
+}
 
-sudo cp colors/* /usr/share/vim/vim7?/colors
+# Copy the files only if they differ
+# ${1}: source dir or file
+# ${2}: destination dir
+function copy_files()
+{
+ if test -d "${1}"; then
+    local -a sources
+    (
+        cd "${1}"
+        sources=(*)
+        mkdir -p "${2}"
+        local size=${#sources[*]}
+        local i=0
+        while test $i -lt $size; do
+            local name="${sources[$i]}"
+            copy_one_file "$name" "${2}/$name" ${3}
+            i=$(($i+1))
+        done
+    )
+ else
+    copy_one_file "${1}" "${2}"
+ fi
+}
+
+copy_files bin $HOME/bin/vim
+copy_files plugin $HOME/.vim/plugin
+copy_files vimrc $HOME/.vimrc
+copy_files gvimrc $HOME/.gvimrc
+copy_files colors /usr/share/vim/vim7?/colors 1
 
