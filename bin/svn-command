@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+
+SVN="`which svn`"
+
+COMMAND="$1"
+shift
+NAME="$1"
+shift
+
+while test $# -gt 0; do
+    case "$1" in
+        -r)
+            shift
+            REVISION=$1
+        ;;
+    esac
+    shift
+done
+
+case "$COMMAND" in
+    blame)
+        info="`svn info "$NAME"`"
+        test $? = "0" || exit 1
+        echo "# URL:      `echo "$info" | grep "^URL:"      | cut -d " " -f 2`"
+        echo "# Revision: `echo "$info" | grep "^Revision:" | cut -d " " -f 2`"
+        echo
+        if test "$REVISION"; then
+            $SVN blame "$NAME" -r "$REVISION"
+        else
+            $SVN blame "${NAME}@HEAD"
+        fi
+    ;;
+    change)
+        $SVN diff "$NAME" -c "$REVISION"
+    ;;
+    diff)
+        $SVN diff "$NAME" -r "$REVISION"
+    ;;
+    log)
+        $SVN log "$NAME" -c "$REVISION"
+    ;;
+    *)
+        echo "Unhandled mode: '$COMMAND'"
+        exit 1
+    ;;
+esac
+

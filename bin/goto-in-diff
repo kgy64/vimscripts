@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+
+POS="$1"
+RANGE="$3"
+
+START="`echo "$RANGE" | sed "s/[+-]//g" | cut -d "," -f 1`"
+LENGTH="`echo "$RANGE" | sed "s/[+-]//g" | cut -d "," -f 2`"
+END=$(($START+$LENGTH))
+
+test $POS -lt $START && exit 0
+test $POS -gt $END && exit 0
+
+DIFI=$(($POS-$START))
+
+echo "${DIFI}j"
+

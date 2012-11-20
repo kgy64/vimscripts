@@ -21,7 +21,7 @@ function copy_one_file()
  test -e "$target" && diff -q "$source" "$target" >/dev/null 2>&1 && not_copied "$target" && return
  local do_sudo
  test "${3}" && do_sudo="sudo"
- $do_sudo cp "$source" "$target" && copied "$target"
+ $do_sudo cp -a "$source" "$target" && copied "$target"
 }
 
 # Copy the files only if they differ
