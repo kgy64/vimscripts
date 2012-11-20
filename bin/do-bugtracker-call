@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+
+function check_browser()
+{
+	test "$BROWSER" && return
+	BROWSER="`which ${1} 2>/dev/null`"
+}
+
+check_browser "chrome"
+check_browser "google-chrome"
+check_browser "mozilla"
+check_browser "konqueror"
+
+test "$BROWSER" || exit 1
+
+$BROWSER http://bugtracker.igomyway.com/view.php?id=$1 &
+

@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+
+cat <<EOF
+**** generic commands ****
+
+     F2:    Print this help.
+     F3:    Update cscope/ctags database.
+   S-F3:    Open 'kompare' with the current file. Useful for diff files only.
+     F4:    Print the current date and time.
+   S-F4:    Same as F4, plus the seconds.
+     F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
+
+**** svn related commands ****
+
+     F8:    Revert of the current file (can be used in diff file too)
+     F9:    Read the svn log of the current file
+   S-F9:    Read the given revision of the current file
+    F10:    Read the revision under cursor (useful in diff window)
+  S-F10:    Read the previous revision as F10 does
+  A-F10:    Read the original version of the current file from svn
+    F11:    'svn log' and 'diff' of the revision under the cursor (useful in diff window)
+  S-F11:    Same as 'F11', for the current file only
+  A-F11:    Read only the svn diff of the current file
+    F12:    'svn blame' of the current file
+  S-F12:    'svn blame' with mergeinfo of the current file
+
+**** ctags commands ****
+
+  g Ctrl-] Jump where the keyword under the cursor is defined to (:tjump)
+  Ctrl-]   Jump to the definition using keyword under the cursor (:tselect)
+  g]       The same as previous                                  (:tag)
+  [i       Display the first line that contains the keyword under the cursor.
+  ]i       Like "[i", but start at the current cursor position.
+  [I       Display all lines that contain the keyword under the cursor.
+  ]I       Like "[I", but start at the current cursor position.
+  [d       Display the first macro definition that contains the macro under the cursor.
+  ]d       Like "[d", but start at the current cursor position.
+
+**** cscope commands ****
+
+First character:
+  Ctrl-\ Open in the same window.
+  ;      Open in new window.
+
+Second character:
+  s  Find this C symbol.
+  g  Find this definition.
+  v  Find functions called by this function.
+  c  Find functions calling this function.
+  t  Find this text string.
+  e  Find this egrep pattern.
+  f  Find this file.
+  i  Find files #including the file.
+  j  Find files #including this file.
+  I  Find files #including this file.
+  d  Find the definition using ctags command ":tjump" (same as "Ctrl-w g Ctrl-]").
+
+Second char with <CTRL>: enter commandline
+
+EOF

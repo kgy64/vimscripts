@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+
+mkdir -p $HOME/bin/vim
+cp bin/* $HOME/bin/vim
+
+mkdir -p $HOME/.vim/plugin
+cp plugin/* $HOME/.vim/plugin
+
+cp vimrc $HOME/.vimrc
+cp gvimrc $HOME/.gvimrc
+
+sudo cp colors/* /usr/share/vim/vim7?/colors
+

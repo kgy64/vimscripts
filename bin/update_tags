@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+
+rm -f tags cscope.*
+
+find -maxdepth 1 -mindepth 1 -type d ! -name ".*" >cscope.dirs
+
+if test -e exclude.kgy
+then
+	cat exclude.kgy | (
+		read name
+		my_excludes="$my_excludes --exclude=$name"
+		sed -i -e "s%./$name\>%%" cscope.dirs
+	)
+fi
+
+find `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.java" >cscope.files
+
+/usr/bin/ctags --c++-kinds=+p --fields=+iaS --extra=+q -L cscope.files
+
+sed -i -e "s/ /\\\\ /g" cscope.files
+/usr/bin/cscope -R -b -q
+
+# rm cscope.files cscope.dirs
+
