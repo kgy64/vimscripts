@@ -48,7 +48,8 @@ function copy_files()
  fi
 }
 
-copy_files bin $HOME/bin/vim
+copy_files bin $HOME/bin
+copy_files bin-vim $HOME/bin/vim
 copy_files plugin $HOME/.vim/plugin
 copy_files vimrc $HOME/.vimrc
 copy_files gvimrc $HOME/.gvimrc

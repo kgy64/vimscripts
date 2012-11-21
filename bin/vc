@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+
+function find_revision_control()
+{
+ BASE="${1}"
+
+ test -d "$BASE/.svn" && echo "SVN" && return
+ test -d "$BASE/.git" && echo "GIT" && return
+ test "$BASE" = "/" && echo "NONE" && return
+
+ find_revision_control "`dirname "$BASE"`"
+}
+
+find_revision_control "$PWD"
+

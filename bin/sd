@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+
+function do_svn_mode()
+{
+ ss | grep "^[AM]" | grep -v "\.vcproj\>" | grep -v "\.sln\>" | awk '{ i=2; while (1) { printf("%s ", $i); if (i>=NF) break; i++ }; printf("\n"); }' | {
+    declare -a files
+    index=0
+    while read line
+    do
+        files[$index]="$line"
+        index=$(($index+1))
+    done
+    if test ${#files[*]} = 0; then
+        echo "No difference." >&2
+        exit 0
+    elif test ${#files[*]} -gt 0; then
+        echo "${#files[*]} files differ." >&2
+    fi
+    svn diff "${files[@]}" "$@"
+ }
+}
+
+function git_mod_out()
+{
+ sed -e "s%^--- a/%--- %" -e "s%+++ b/%+++ %"
+}
+
+function do_git_mode()
+{
+ git diff --relative . "$@" | git_mod_out
+ git diff --cached --relative . "$@" | git_mod_out
+}
+
+# ---------------------------------------------
+
+PWD="`pwd`"
+
+case "`$HOME/bin/vc`" in
+    SVN)
+        do_svn_mode | dos2unix
+    ;;
+    GIT)
+        do_git_mode | dos2unix
+    ;;
+    *)
+        echo "No version control found." >&2
+    ;;
+esac
+
