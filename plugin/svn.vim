@@ -29,8 +29,8 @@ endfunction
 
 function! GoToMyFile()
     if (&filetype != "diff")
-	echo "2 Not a diff file"
-	return
+    echo "2 Not a diff file"
+    return
     endif
     " Save the value of the unnamed register
     let l:saved_reg = @"
@@ -49,8 +49,8 @@ endfunction
 
 function! GoToFile()
     if (&filetype != "diff")
-	echo "3 Not a diff file"
-	return
+        echo "3 Not a diff file"
+        return
     endif
     " Save the value of the unnamed register
     let l:saved_reg = @"
@@ -147,6 +147,10 @@ function! Svn_Blame_Mergeinfo()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
+    if !exists("w:kgy_orig_name")
+      execute 'echo "Error: incorrect file"'
+      return
+    endif
       let l:name = w:kgy_orig_name
   endif
   let l:currpos = line(".")
@@ -207,15 +211,18 @@ function! Svn_GotoInDiff(pos)
   normal 0
   while 1
     if (line(".") == 1)
+      execute 'echo "Wrong file format"'
       return
     endif
-    let l:found = search("^@@", "bcW")
+    let l:found = search("^@@", "bW")
     if (l:found == 0)
+      execute 'echo "Position not found"'
       return
     endif
     let l:result = system("$HOME/bin/vim/goto-in-diff " . a:pos . " " . getline("."))
     if (!empty(l:result))
-      normal l:result
+      execute 'echo "got {' . l:result . 'X}"'
+      execute 'normal! ' . l:result . 'j'
       return
     endif
   endwhile
@@ -224,12 +231,16 @@ endfunction
 function! Svn_Diff_Current()
   let l:saved_reg = @"
   let l:name = expand("%")
+  if empty(l:name)
+    if !exists("w:kgy_orig_name")
+      execute 'echo "Error: incorrect file"'
+      return
+    endif
+    let l:name = w:kgy_orig_name
+  endif
   let l:currpos = line(".")
   if exists("w:kgy_row_offset")
     let l:currpos -= w:kgy_row_offset
-  endif
-  if empty(l:name)
-    let l:name = w:kgy_orig_name
   endif
   let l:revision = expand("<cword>")
   new

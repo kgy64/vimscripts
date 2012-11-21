@@ -8,6 +8,12 @@ shift
 NAME="$1"
 shift
 
+if test -d "$NAME"; then
+    MODE="dir"
+else
+    MODE="file"
+fi
+
 while test $# -gt 0; do
     case "$1" in
         -r)
@@ -18,12 +24,36 @@ while test $# -gt 0; do
     shift
 done
 
+if test "$REVISION"; then
+    SVN_PATH="`svn info "$NAME" -r $REVISION | grep "^URL: " | cut -d " " -f 2`"
+else
+    SVN_PATH="`svn info "$NAME" | grep "^URL: " | cut -d " " -f 2`"
+fi
+
+ORIGINAL_PATH="$SVN_PATH"
+
+function not_found()
+{
+ echo "**** ERROR: ****"
+ echo "Path: $ORIGINAL_PATH"
+ echo "Name: $NAME"
+ test "$REVISION" && echo "Revision: $REVISION"
+ echo "SVN Path not found."
+ exit 1
+}
+
+function step_up()
+{
+ test "$MODE" = "file" && not_found
+ local new_path="`dirname "$SVN_PATH"`"
+ test "$new_path" = "$SVN_PATH" && not_found
+ SVN_PATH="$new_path"
+}
+
 case "$COMMAND" in
     blame)
-        info="`svn info "$NAME"`"
-        test $? = "0" || exit 1
-        echo "# URL:      `echo "$info" | grep "^URL:"      | cut -d " " -f 2`"
-        echo "# Revision: `echo "$info" | grep "^Revision:" | cut -d " " -f 2`"
+        echo "// SVN path: $SVN_PATH"
+        echo "// Revision: $REVISION"
         echo
         if test "$REVISION"; then
             $SVN blame "$NAME" -r "$REVISION"
@@ -32,13 +62,25 @@ case "$COMMAND" in
         fi
     ;;
     change)
-        $SVN diff "$NAME" -c "$REVISION"
+        while true; do
+            $SVN diff "$SVN_PATH" -c "$REVISION" 2>&1
+            test $? = 0 && exit
+            step_up
+        done
     ;;
     diff)
-        $SVN diff "$NAME" -r "$REVISION"
+        while true; do
+            $SVN diff "$SVN_PATH" -r "$REVISION" 2>&1
+            test $? = 0 && exit
+            step_up
+        done
     ;;
     log)
-        $SVN log "$NAME" -c "$REVISION"
+        while true; do
+            $SVN log "$SVN_PATH" -c "$REVISION" 2>&1
+            test $? = 0 && exit
+            step_up
+        done
     ;;
     *)
         echo "Unhandled mode: '$COMMAND'"
