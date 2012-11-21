@@ -106,7 +106,7 @@ nmap <Leader>d :call OpenDiff()<CR>
 " My own svn-related stuff:
 "
 
-function! Svn_Blame()
+function! Ver_Blame()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
@@ -133,17 +133,38 @@ function! Svn_Blame()
   else
     let l:revision = ''
   endif
-  execute '$read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision
   normal ggdd
   call cursor(l:currpos, 1)
   let @"=l:saved_reg
 endfunction
 
-map <F12> :call Svn_Blame()<CR>
+map <F12> :call Ver_Blame()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_Blame_Mergeinfo()
+function! Ver_Log_Generic(name, revision)
+  execute "normal! o### Log of '" . a:name . "', revision " . a:revision . ":"
+  execute ":silent! $read! $HOME/bin/vim/do-revision-cmd log " . a:name . " -r " . a:revision
+endfunction
+
+function! Ver_Log()
+  let l:saved_reg = @"
+  let l:revision = expand("<cword>")
+  new
+  call Ver_Log_Generic(".", l:revision)
+  normal ggdd
+  unlet w:kgy_orig_name
+  unlet w:kgy_svn_revision
+  unlet w:kgy_row_offset
+  let @"=l:saved_reg
+endfunction
+
+map <S-F12> :call Ver_Log()<CR>
+
+" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function! Ver_Blame_Mergeinfo()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
@@ -167,46 +188,30 @@ function! Svn_Blame_Mergeinfo()
   if exists("l:svn_revision")
     let w:kgy_svn_revision = l:svn_revision
     let l:revision = ' -r ' . l:svn_revision
-  else
-    let l:revision = '@BASE'
   endif
-  execute '$read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision . ' --force -g'
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision . ' --force -g'
   normal ggdd
   call cursor(l:currpos, 1)
   let @"=l:saved_reg
 endfunction
 
-map <S-F12> :call Svn_Blame_Mergeinfo()<CR>
+map <A-F12> :call Ver_Blame_Mergeinfo()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_MyDiff()
-  let l:saved_reg = @"
-  let l:filename = expand("%")
-  let l:currpos = line(".")
-  new
-  execute ':silent! $read ! svn diff ' . l:filename
-  execute ':set filetype=diff'
-  call cursor(1, 1)
-  execute "normal! dd"
-  let @"=l:saved_reg
-endfunction
-
-map <A-F11> :call Svn_MyDiff()<CR>
-
-" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-function! Svn_Diff_Generic(name, revision)
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log ' . a:name . ' -r ' . a:revision
-  execute "normal! o"
-  execute "normal! o### svn diff of '" . a:name . "', revision " . a:revision . ":"
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change ' . a:name . ' -r ' . a:revision
-  normal ggdd
-  execute "normal! O### svn log of '" . a:name . "', revision " . a:revision . ":"
+function! Ver_Diff_Local(name)
+  execute "normal! o### Diff of '" . a:name . "', local modifications:"
+  execute ":silent! $read! $HOME/bin/vim/do-revision-cmd local " . a:name
   execute ":set filetype=diff"
 endfunction
 
-function! Svn_GotoInDiff(pos)
+function! Ver_Diff_Generic_Rev(name, revision)
+  execute "normal! o### Diff of '" . a:name . "', revision " . a:revision . ":"
+  execute ":silent! $read! $HOME/bin/vim/do-revision-cmd change " . a:name . " -r " . a:revision
+  execute ":set filetype=diff"
+endfunction
+
+function! Ver_GotoInDiff(pos)
   execute ':$'
   normal 0
   while 1
@@ -228,7 +233,33 @@ function! Svn_GotoInDiff(pos)
   endwhile
 endfunction
 
-function! Svn_Diff_Current()
+" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function! Ver_LocalDiff()
+  let l:saved_reg = @"
+  let l:name = expand("%")
+  if empty(l:name)
+    if !exists("w:kgy_orig_name")
+      execute 'echo "Error: incorrect file"'
+      return
+    endif
+    let l:name = w:kgy_orig_name
+  endif
+  let l:currpos = line(".")
+  if exists("w:kgy_row_offset")
+    let l:currpos -= w:kgy_row_offset
+  endif
+  new
+  call Ver_Diff_Local(l:name)
+  call Ver_GotoInDiff(l:currpos)
+  let @"=l:saved_reg
+endfunction
+
+map <A-F11> :call Ver_LocalDiff()<CR>
+
+" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function! Ver_Diff_Current()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
@@ -244,28 +275,42 @@ function! Svn_Diff_Current()
   endif
   let l:revision = expand("<cword>")
   new
-  call Svn_Diff_Generic(l:name, l:revision)
-  call Svn_GotoInDiff(l:currpos)
+  call Ver_Diff_Generic_Rev(l:name, l:revision)
+  call Ver_GotoInDiff(l:currpos)
   let @"=l:saved_reg
 endfunction
 
-map <S-F11> :call Svn_Diff_Current()<CR>
+map <S-F11> :call Ver_Diff_Current()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_Diff()
+function! Ver_Read_Log_Rev(revision)
+  execute "normal! o### svn log of revision " . a:revision . ":"
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log "" -r ' . a:revision
+endfunction
+
+function! Ver_Diff_Full_Rev(revision)
+  execute "normal! o### svn diff of revision " . a:revision . ":"
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change "" -r ' . a:revision
+  set filetype=diff
+endfunction
+
+function! Ver_Diff_Full()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
   new
-  call Svn_Diff_Generic(".", l:revision)
+  call Ver_Read_Log_Rev(l:revision)
+  normal o
+  call Ver_Diff_Full_Rev(l:revision)
+  normal ggdd
   let @"=l:saved_reg
 endfunction
 
-map <F11> :call Svn_Diff()<CR>
+map <F11> :call Ver_Diff_Full()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_GetRevOfFile()
+function! Ver_GetRevOfFile()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
   let l:orig_file_name = w:kgy_orig_name
@@ -274,18 +319,18 @@ function! Svn_GetRevOfFile()
     let l:currpos -= w:kgy_row_offset
   endif
   new
-  execute '$read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
   let w:kgy_orig_name = l:orig_file_name
   let w:kgy_svn_revision = l:revision
   call cursor(l:currpos, 1)
   let @"=l:saved_reg
 endfunction
 
-map <F10> :call Svn_GetRevOfFile()<CR>
+map <F10> :call Ver_GetRevOfFile()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_GetPrevRevOfFile()
+function! Ver_GetPrevRevOfFile()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
   let l:prev_revision = l:revision
@@ -296,18 +341,18 @@ function! Svn_GetPrevRevOfFile()
       let l:currpos -= w:kgy_row_offset
   endif
   new
-  execute '$read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:prev_revision
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:prev_revision
   let w:kgy_orig_name = l:orig_file_name
   let w:kgy_svn_revision = l:prev_revision
   call cursor(l:currpos, 1)
   let @"=l:saved_reg
 endfunction
 
-map <S-F10> :call Svn_GetPrevRevOfFile()<CR>
+map <S-F10> :call Ver_GetPrevRevOfFile()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_Cat()
+function! Ver_Cat()
   let l:saved_reg = @"
   let l:filename = expand("%")
   let l:currpos = line(".")
@@ -320,29 +365,33 @@ function! Svn_Cat()
   let @"=l:saved_reg
 endfunction
 
-map <A-F10> :call Svn_Cat()<CR>
+map <A-F10> :call Ver_Cat()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_Log()
+function Ver_Read_Log_File(name)
+  execute "normal! o### svn log of file " . l:name . ":"
+  let w:kgy_orig_name = a:name
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd log ' . a:name
+endfunction
+
+function! Ver_Log()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
     let l:name = w:kgy_orig_name
   endif
   new
-  execute "normal! O### svn log of file " . l:name . ":"
-  let w:kgy_orig_name = l:name
-  execute '$read ! $HOME/bin/vim/do-revision-cmd log ' . l:name . "@BASE"
-  call cursor(1, 1)
+  call Ver_Read_Log_File(l:name)
+  normal ggdd
   let @"=l:saved_reg
 endfunction
 
-map <F9> :call Svn_Log()<CR>
+map <F9> :call Ver_Log()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_GetGivenRevOfFile()
+function! Ver_GetGivenRevOfFile()
   let l:saved_reg = @"
   let l:revision = input("Revision #")
   if !empty(l:revision)
@@ -354,21 +403,21 @@ function! Svn_GetGivenRevOfFile()
     new
     let w:kgy_orig_name = l:orig_file_name
     let w:kgy_svn_revision = l:revision
-    execute '$read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
+    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
     call cursor(l:currpos, 1)
   endif
   let @"=l:saved_reg
 endfunction
 
-map <S-F9> :call Svn_GetGivenRevOfFile()<CR>
+map <S-F9> :call Ver_GetGivenRevOfFile()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function! Svn_DoRevert(name)
+function! Ver_DoRevert(name)
   execute ':! $HOME/bin/vim/do-revision-cmd revert ' . a:name
 endfunction
 
-function! Svn_Revert()
+function! Ver_Revert()
   let l:saved_reg = @"
   let l:filename = expand("%")
   if empty(l:filename)
@@ -385,13 +434,13 @@ function! Svn_Revert()
     let l:filename = expand("<cfile>")
     call cursor(l:curpos, 1)
   endif
-  call Svn_DoRevert(l:filename)
+  call Ver_DoRevert(l:filename)
 "  if (&filetype == "diff")
 "    call Refreshdiff()
 "  endif
   let @"=l:saved_reg
 endfunction
 
-map <F8> :call Svn_Revert()<CR>
+map <F8> :call Ver_Revert()<CR>
 
 " * * * * * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * * *

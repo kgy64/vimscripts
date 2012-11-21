@@ -11,7 +11,7 @@ cat <<EOF
    S-F4:    Same as F4, plus the seconds.
      F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
 
-**** svn related commands ****
+**** revision related commands ****
 
      F8:    Revert of the current file (can be used in diff file too)
      F9:    Read the svn log of the current file
@@ -19,11 +19,12 @@ cat <<EOF
     F10:    Read the revision under cursor (useful in diff window)
   S-F10:    Read the previous revision as F10 does
   A-F10:    Read the original version of the current file from svn
-    F11:    'svn log' and 'diff' of the revision under the cursor (useful in diff window)
-  S-F11:    Same as 'F11', for the current file only
-  A-F11:    Read only the svn diff of the current file
+    F11:    Full log and diff of the revision under the cursor (useful in diff window)
+  S-F11:    Diff of the current file only, revision under the cursor (useful in diff window)
+  A-F11:    Local modifications of the current file
     F12:    'svn blame' of the current file
-  S-F12:    'svn blame' with mergeinfo of the current file
+  S-F12:    'svn log' of the revision under the cursor (useful in diff window)
+  A-F12:    'svn blame' with mergeinfo of the current file
 
 **** ctags commands ****
 

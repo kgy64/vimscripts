@@ -11,6 +11,6 @@ END=$(($START+$LENGTH))
 test $POS -lt $START && exit 0
 test $POS -gt $END && exit 0
 
-DIFI=$(($POS-$START))
+DIFI=$(($POS-$START+1))
 
 echo -n "${DIFI}"
