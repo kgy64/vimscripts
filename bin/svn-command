@@ -25,9 +25,9 @@ while test $# -gt 0; do
 done
 
 if test "$REVISION"; then
-    SVN_PATH="`svn info "$NAME" -r $REVISION | grep "^URL: " | cut -d " " -f 2`"
+    SVN_PATH="`$SVN info "$NAME" -r $REVISION 2>/dev/null | grep "^URL: " | cut -d " " -f 2`"
 else
-    SVN_PATH="`svn info "$NAME" | grep "^URL: " | cut -d " " -f 2`"
+    SVN_PATH="`$SVN info "$NAME" 2>/dev/null | grep "^URL: " | cut -d " " -f 2`"
 fi
 
 ORIGINAL_PATH="$SVN_PATH"
@@ -56,9 +56,9 @@ case "$COMMAND" in
         echo "// Revision: $REVISION"
         echo
         if test "$REVISION"; then
-            $SVN blame "$NAME" -r "$REVISION"
+            $SVN blame "$NAME" -r "$REVISION" 2>&1
         else
-            $SVN blame "${NAME}@HEAD"
+            $SVN blame "${NAME}@HEAD" 2>&1
         fi
     ;;
     change)
@@ -81,6 +81,13 @@ case "$COMMAND" in
             test $? = 0 && exit
             step_up
         done
+    ;;
+    revert)
+        echo "Path: $SVN_PATH" >&2
+        echo "Warning: this operation is irreversible!" >&2
+        read -p "Do you want to revert it (yes/no)? " yesno
+        test "$yesno" = "yes" || exit 1
+        $SVN revert "$NAME" 2>&1
     ;;
     *)
         echo "Unhandled mode: '$COMMAND'"

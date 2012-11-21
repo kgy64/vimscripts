@@ -386,6 +386,9 @@ function! Svn_Revert()
     call cursor(l:curpos, 1)
   endif
   call Svn_DoRevert(l:filename)
+"  if (&filetype == "diff")
+"    call Refreshdiff()
+"  endif
   let @"=l:saved_reg
 endfunction
 
