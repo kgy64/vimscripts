@@ -24,11 +24,8 @@ function! GoToFileAndLine()
   endif
   call cursor(l:currpos, l:column)
   execute ":scs find f " . l:filename
-  if exists(l:file_pos)
-    let l:check = l:file_pos + 0
-    if l:check != 0
-      call cursor(l:file_pos, 1)
-    endif
+  if exists('l:file_pos') && l:file_pos > 0
+    call cursor(l:file_pos, 1)
   endif
   let @"=l:saved_reg
 endfunction
