@@ -11,15 +11,15 @@
 "
 
 function! Refreshdiff()
-    if (&filetype != "diff")
-        echo "1 Not a diff file"
+    if (&filetype != "diff" && !empty(expand("%")))
+        echo "Error: Not a diff file"
         return
     endif
     " Save the value of the unnamed register
     let l:saved_reg = @"
     let orig_lineno=line(".")
     normal ggdG
-    r !sd 2>/dev/null | dos2unix
+    r !sd 2>/dev/null
     normal ggdd
     set filetype=diff
     call cursor(orig_lineno,0)
@@ -136,6 +136,12 @@ function! Ver_Blame()
   execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision
   normal ggdd
   call cursor(l:currpos, 1)
+  let l:statusline = 'Blame of ' . l:name
+  if !empty(l:revision)
+    let l:statusline .= '@' . l:revision
+  endif
+  let l:statusline .= ' [F12]'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
@@ -148,19 +154,27 @@ function! Ver_Log_Generic(name, revision)
   execute ":silent! $read! $HOME/bin/vim/do-revision-cmd log " . a:name . " -r " . a:revision
 endfunction
 
-function! Ver_Log()
+function! Ver_Log_Rev()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
+  if empty(l:revision)
+    execute 'echo "Error: no revision number under cursor"'
+    return
+  endif
+  if l:revision <= 0
+    execute 'echo "Error: \"' . l:revision . '\" is not a valid revision number"'
+    return
+  endif
   new
   call Ver_Log_Generic(".", l:revision)
   normal ggdd
-  unlet w:kgy_orig_name
-  unlet w:kgy_svn_revision
-  unlet w:kgy_row_offset
+  let l:statusline = 'Log of revision ' . l:revision
+  let l:statusline .= ' [S-F12]'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
-map <S-F12> :call Ver_Log()<CR>
+map <S-F12> :call Ver_Log_Rev()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -192,6 +206,12 @@ function! Ver_Blame_Mergeinfo()
   execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision . ' --force -g'
   normal ggdd
   call cursor(l:currpos, 1)
+  let l:statusline = 'Blame-M of ' . l:name
+  if !empty(l:revision)
+    let l:statusline .= '@' . l:revision
+  endif
+  let l:statusline .= ' [A-F12]'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
@@ -252,6 +272,9 @@ function! Ver_LocalDiff()
   new
   call Ver_Diff_Local(l:name)
   call Ver_GotoInDiff(l:currpos)
+  let l:statusline = 'Local change of ' . l:name
+  let l:statusline .= ' [A-F11]'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
@@ -277,6 +300,9 @@ function! Ver_Diff_Current()
   new
   call Ver_Diff_Generic_Rev(l:name, l:revision)
   call Ver_GotoInDiff(l:currpos)
+  let l:statusline = 'Change ' . l:revision . ' of ' . l:name
+  let l:statusline .= ' [S-F11]'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
@@ -379,6 +405,10 @@ function! Ver_Log()
   let l:saved_reg = @"
   let l:name = expand("%")
   if empty(l:name)
+    if !exists("w:kgy_orig_name")
+      execute 'echo "Error: incorrect file"'
+      return
+    endif
     let l:name = w:kgy_orig_name
   endif
   new

@@ -21,12 +21,15 @@ function! GoToFileAndLine()
   if l:column != l:colon_pos
     execute "normal !l"
     let l:file_pos = expand("<cword>")
-  else
-    let l:file_pos = 1
   endif
   call cursor(l:currpos, l:column)
   execute ":scs find f " . l:filename
-  call cursor(l:file_pos, 1)
+  if exists(l:file_pos)
+    let l:check = l:file_pos + 0
+    if l:check != 0
+      call cursor(l:file_pos, 1)
+    endif
+  endif
   let @"=l:saved_reg
 endfunction
 
