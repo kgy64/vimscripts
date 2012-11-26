@@ -1,0 +1,31 @@
+#
+#
+
+function find_revision_control()
+{
+ local DIR="${1}"
+
+ test -d "$DIR/.svn" && echo "SVN" && return
+ test -d "$DIR/.git" && echo "GIT" && return
+
+ test "$DIR" = "$HOME" -o "$DIR" = "/" && echo "NONE" && return
+
+ find_revision_control "`dirname "$DIR"`"
+}
+
+function call_revision_cmd()
+{
+    case "$MODE" in
+        SVN)
+            $ROOT/svn-command "$COMMAND" "$NAME" "$@"
+        ;;
+        GIT)
+            $ROOT/git-command "$COMMAND" "$NAME" "$@"
+        ;;
+        *)
+            echo "No version control."
+            exit 1
+        ;;
+    esac
+}
+

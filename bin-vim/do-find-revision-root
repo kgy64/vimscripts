@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+
+SVN="`which svn`"
+
+source $HOME/bin/vim/revision-helpers
+
+function find_svn_root()
+{
+ local root="${1}"
+ while true
+ do
+    local log="`$
+ done
+}
+
+ROOT="$1"
+
+case "$MODE" in
+    SVN)
+        find_svn_root "$ROOT"
+    ;;
+    GIT)
+        echo "$ROOT"
+    ;;
+    *)
+        echo "No version control."
+        exit 1
+    ;;
+esac
+
