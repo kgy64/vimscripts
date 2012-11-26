@@ -3,28 +3,7 @@
 
 SVN="`which svn`"
 
-COMMAND="$1"
-shift
-NAME="$1"
-shift
-
-if test "$NAME"; then
-    if test -d "$NAME"; then
-        MODE="dir"
-    else
-        MODE="file"
-    fi
-fi
-
-while test $# -gt 0; do
-    case "$1" in
-        -r)
-            shift
-            REVISION=$1
-        ;;
-    esac
-    shift
-done
+. `dirname $0`/params-parse
 
 function set_svn_root()
 {
@@ -103,6 +82,9 @@ case "$COMMAND" in
     local)
         $SVN diff "$NAME" 2>&1
     ;;
+    cat)
+        $SVN cat "$NAME" -r "$REVISION"
+    ;;
     log)
         if test "$SVN_ROOT"; then
             $SVN log "$SVN_ROOT" -r "$REVISION"
@@ -118,7 +100,7 @@ case "$COMMAND" in
         $SVN revert "$NAME" 2>&1
     ;;
     *)
-        echo "Unhandled mode: '$COMMAND'"
+        echo "SVN: Unhandled mode: '$COMMAND'"
         exit 1
     ;;
 esac

@@ -1,3 +1,19 @@
 #!/bin/bash
 #
 
+GIT="`which git`"
+
+. `dirname $0`/params-parse
+
+case "$COMMAND" in
+    blame)
+        $GIT blame $REVISION -- "$NAME"
+    ;;
+    log)
+        $GIT log -n 1 $REVISION -- "$NAME"
+    ;;
+    *)
+        echo "GIT: Unhandled mode: '$COMMAND'"
+        exit 1
+    ;;
+esac

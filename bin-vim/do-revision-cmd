@@ -1,17 +1,7 @@
 #!/bin/bash
 #
 
-function find_revision_control()
-{
- local DIR="${1}"
-
- test -d "$DIR/.svn" && echo "SVN" && return
- test -d "$DIR/.git" && echo "GIT" && return
-
- test "$DIR" = "$HOME" -o "$DIR" = "/" && echo "NONE" && return
-
- find_revision_control "`dirname "$DIR"`"
-}
+source $HOME/bin/vim/revision-helpers
 
 ROOT="`dirname "$0"`"
 ROOT="`cd "$ROOT" && pwd`"
@@ -21,20 +11,11 @@ shift
 DIR="`dirname "$1"`"
 NAME="`basename "$1"`"
 shift
+
 cd "$DIR" || exit 1
 DIR="`pwd`"
 
 MODE="`find_revision_control "$DIR"`"
 
-case "$MODE" in
-    SVN)
-        $ROOT/svn-command "$COMMAND" "$NAME" "$@"
-    ;;
-    GIT)
-        $ROOT/git-command "$COMMAND" "$NAME" "$@"
-    ;;
-    *)
-        echo "No version control."
-    ;;
-esac
+call_revision_cmd "$@"
 

@@ -1,0 +1,26 @@
+#
+#
+
+COMMAND="$1"
+shift
+NAME="$1"
+shift
+
+if test "$NAME"; then
+    if test -d "$NAME"; then
+        MODE="dir"
+    else
+        MODE="file"
+    fi
+fi
+
+while test $# -gt 0; do
+    case "$1" in
+        -r)
+            shift
+            REVISION=$1
+        ;;
+    esac
+    shift
+done
+

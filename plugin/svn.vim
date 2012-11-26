@@ -130,17 +130,16 @@ function! Ver_Blame()
   if exists("l:svn_revision")
     let w:kgy_svn_revision = l:svn_revision
     let l:revision = ' -r ' . l:svn_revision
+    let l:display_rev = ' (rev ' . l:svn_revision . ')'
   else
     let l:revision = ''
+    let l:display_rev = ''
   endif
   execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision
   normal ggdd
   call cursor(l:currpos, 1)
-  let l:statusline = 'Blame of ' . l:name
-  if !empty(l:revision)
-    let l:statusline .= '@' . l:revision
-  endif
-  let l:statusline .= ' [F12]'
+  let l:statusline = 'Blame of ' . l:name . l:display_rev
+  let l:statusline .= ' [F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -161,15 +160,11 @@ function! Ver_Log_Rev()
     execute 'echo "Error: no revision number under cursor"'
     return
   endif
-  if l:revision <= 0
-    execute 'echo "Error: \"' . l:revision . '\" is not a valid revision number"'
-    return
-  endif
   new
   call Ver_Log_Generic(".", l:revision)
   normal ggdd
   let l:statusline = 'Log of revision ' . l:revision
-  let l:statusline .= ' [S-F12]'
+  let l:statusline .= ' [S-F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -202,15 +197,16 @@ function! Ver_Blame_Mergeinfo()
   if exists("l:svn_revision")
     let w:kgy_svn_revision = l:svn_revision
     let l:revision = ' -r ' . l:svn_revision
+    let l:display_rev = ' (rev' . l:svn_revision . ')'
+  else
+    let l:revision = ''
+    let l:display_rev = ''
   endif
   execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd blame ' . l:name . l:revision . ' --force -g'
   normal ggdd
   call cursor(l:currpos, 1)
-  let l:statusline = 'Blame-M of ' . l:name
-  if !empty(l:revision)
-    let l:statusline .= '@' . l:revision
-  endif
-  let l:statusline .= ' [A-F12]'
+  let l:statusline = 'Blame-M of ' . l:name . l:display_rev
+  let l:statusline .= ' [A-F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -273,7 +269,7 @@ function! Ver_LocalDiff()
   call Ver_Diff_Local(l:name)
   call Ver_GotoInDiff(l:currpos)
   let l:statusline = 'Local change of ' . l:name
-  let l:statusline .= ' [A-F11]'
+  let l:statusline .= ' [A-F11]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -300,8 +296,8 @@ function! Ver_Diff_Current()
   new
   call Ver_Diff_Generic_Rev(l:name, l:revision)
   call Ver_GotoInDiff(l:currpos)
-  let l:statusline = 'Change ' . l:revision . ' of ' . l:name
-  let l:statusline .= ' [S-F11]'
+  let l:statusline = 'Change of ' . l:name . ' in rev ' . l:revision
+  let l:statusline .= ' [S-F11]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -309,6 +305,10 @@ endfunction
 map <S-F11> :call Ver_Diff_Current()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function! Ver_FindRootPath(revision)
+  return system('$HOME/bin/vim/do-find-revision-root ' . a:revision)
+endfunction
 
 function! Ver_Read_Log_Rev(revision)
   execute "normal! o### svn log of revision " . a:revision . ":"
@@ -324,10 +324,11 @@ endfunction
 function! Ver_Diff_Full()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
+  let l:root_path = call Ver_FindRootPath(l:revision)
   new
-  call Ver_Read_Log_Rev(l:revision)
+  call Ver_Read_Log_Rev(l:root_path, l:revision)
   normal o
-  call Ver_Diff_Full_Rev(l:revision)
+  call Ver_Diff_Full_Rev(l:root_path, l:revision)
   normal ggdd
   let @"=l:saved_reg
 endfunction
@@ -367,10 +368,13 @@ function! Ver_GetPrevRevOfFile()
       let l:currpos -= w:kgy_row_offset
   endif
   new
-  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:prev_revision
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat "' . l:orig_file_name . '" -r ' . l:prev_revision
   let w:kgy_orig_name = l:orig_file_name
   let w:kgy_svn_revision = l:prev_revision
   call cursor(l:currpos, 1)
+  let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:prev_revision . ')'
+  let l:statusline .= ' [S-F10]+'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
