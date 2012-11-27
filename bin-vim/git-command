@@ -1,9 +1,15 @@
 #!/bin/bash
 #
 
-GIT="`which git`"
+GIT="`which git 2>/dev/null`"
+SED="`which sed 2>/dev/null`"
 
 . `dirname $0`/params-parse
+
+function git_path_correct()
+{
+    $SED -e "s%^--- a/%--- ./%" -e "s%+++ b/%+++ ./%"
+}
 
 case "$COMMAND" in
     blame)
@@ -11,6 +17,12 @@ case "$COMMAND" in
     ;;
     log)
         $GIT log -n 1 $REVISION -- "$NAME"
+    ;;
+    change)
+        $GIT diff $REVISION -- "$NAME" | git_path_correct
+    ;;
+    local)
+        $GIT diff "$NAME" | git_path_correct
     ;;
     *)
         echo "GIT: Unhandled mode: '$COMMAND'"

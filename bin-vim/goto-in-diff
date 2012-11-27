@@ -1,8 +1,12 @@
 #!/bin/bash
 #
 
+echo "$@" >>/tmp/x
+
+declare -a ranges=($2)
+
 POS="$1"
-RANGE="$4"
+RANGE="${ranges[2]}"
 
 START="`echo "$RANGE" | sed "s/[+-]//g" | cut -d "," -f 1`"
 LENGTH="`echo "$RANGE" | sed "s/[+-]//g" | cut -d "," -f 2`"

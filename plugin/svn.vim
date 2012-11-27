@@ -235,12 +235,12 @@ function! Ver_GotoInDiff(pos)
       execute 'echo "Wrong file format"'
       return
     endif
-    let l:found = search("^@@", "bW")
+    let l:found = search("^@@ ", "bW")
     if (l:found == 0)
       execute 'echo "Position not found"'
       return
     endif
-    let l:result = system("$HOME/bin/vim/goto-in-diff " . a:pos . " " . getline("."))
+    let l:result = system('$HOME/bin/vim/goto-in-diff ' . a:pos . ' "' . getline(".") . '"')
     if (!empty(l:result))
       execute 'echo "got {' . l:result . 'X}"'
       execute 'normal! ' . l:result . 'j'
@@ -267,6 +267,7 @@ function! Ver_LocalDiff()
   endif
   new
   call Ver_Diff_Local(l:name)
+  normal ggdd
   call Ver_GotoInDiff(l:currpos)
   let l:statusline = 'Local change of ' . l:name
   let l:statusline .= ' [A-F11]+'
@@ -295,6 +296,7 @@ function! Ver_Diff_Current()
   let l:revision = expand("<cword>")
   new
   call Ver_Diff_Generic_Rev(l:name, l:revision)
+  normal ggdd
   call Ver_GotoInDiff(l:currpos)
   let l:statusline = 'Change of ' . l:name . ' in rev ' . l:revision
   let l:statusline .= ' [S-F11]+'
