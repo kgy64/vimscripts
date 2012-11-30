@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+
+#!/bin/bash
+#
+
+. $HOME/bin/vim/revision-helpers
+
+MODE=`find_revision_control`
+
+case "$MODE" in
+    SVN)
+        $HOME/bin/vim/get-previous-svn-revision "$@"
+    ;;
+    GIT)
+        $HOME/bin/vim/get-previous-git-revision "$@"
+    ;;
+    *)
+        echo "ERROR: No version control!"
+        exit 1
+    ;;
+esac
+

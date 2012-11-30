@@ -361,20 +361,32 @@ map <F10> :call Ver_GetRevOfFile()<CR>
 
 function! Ver_GetPrevRevOfFile()
   let l:saved_reg = @"
-  let l:revision = expand("<cword>")
-  let l:prev_revision = l:revision
-  let l:prev_revision -= 1
-  let l:orig_file_name = w:kgy_orig_name
+  let l:filetype = &ft
+  if exists("w:kgy_orig_name")
+    let l:filename = w:kgy_orig_name
+  else
+    let l:filename = expand("%")
+  endif
+  if exists("w:kgy_svn_revision")
+    let l:revision = w:kgy_svn_revision
+  else
+    if l:filetype == "diff"
+      let l:revision = expand("<cword>")
+    else
+      let l:revision = ''
+    endif
+  endif
+  let l:prev_revision = system('$HOME/bin/vim/get-previous-revision ' . l:filename . ' ' . l:revision)
   let l:currpos = line(".")
   if exists("w:kgy_row_offset")
       let l:currpos -= w:kgy_row_offset
   endif
   new
-  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat "' . l:orig_file_name . '" -r ' . l:prev_revision
-  let w:kgy_orig_name = l:orig_file_name
+  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat "' . l:filename . '" -r ' . l:prev_revision
+  let w:kgy_orig_name = l:filename
   let w:kgy_svn_revision = l:prev_revision
   call cursor(l:currpos, 1)
-  let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:prev_revision . ')'
+  let l:statusline = 'File ' . l:filename . ' (rev ' . l:prev_revision . ')'
   let l:statusline .= ' [S-F10]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg

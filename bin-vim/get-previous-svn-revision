@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+
+SVN="`which svn`"
+
+test "$SVN" || exit 1
+
+NAME="$1"
+shift
+REV="$1"
+shift
+
+test "$REV" || REV="HEAD"
+
+LAST_REV="`$SVN info "$NAME" -r "$REV" | grep "^Last Changed Rev" | cut -d " " -f 4`"
+
+PREV_REV=$(($LAST_REV-1))
+
+echo -n "$PREV_REV"
+
