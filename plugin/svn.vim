@@ -11,7 +11,7 @@
 "
 
 function! Refreshdiff()
-    if (w:kgy_filetype != "diff" && !empty(expand("%")))
+    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff" && !empty(expand("%")))
         echo "Error: Not a diff file"
         return
     endif
@@ -28,7 +28,7 @@ function! Refreshdiff()
 endfunction
 
 function! GoToMyFile()
-    if (w:kgy_filetype != "diff")
+    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff")
       echo "2 Not a diff file"
       return
     endif
@@ -48,7 +48,7 @@ function! GoToMyFile()
 endfunction
 
 function! GoToFile()
-    if (w:kgy_filetype != "diff")
+    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff")
         echo "3 Not a diff file"
         return
     endif
@@ -379,7 +379,7 @@ function! Ver_GetPrevRevOfFile()
   if exists("w:kgy_svn_revision")
     let l:revision = w:kgy_svn_revision
   else
-    if (w:kgy_filetype == "diff" || w:kgy_filetype == "blame")
+    if (exists("w:kgy_filetype") && (w:kgy_filetype == "diff" || w:kgy_filetype == "blame"))
       let l:revision = expand("<cword>")
     else
       let l:revision = ''
@@ -476,7 +476,7 @@ endfunction
 
 function! Ver_Revert()
   let l:saved_reg = @"
-  if (w:kgy_filetype == "diff")
+  if (exists("w:kgy_filetype") && w:kgy_filetype == "diff")
     let l:curpos = line(".")
     if exists("w:kgy_row_offset")
         let l:currpos -= w:kgy_row_offset
@@ -497,7 +497,7 @@ function! Ver_Revert()
     endif
   endif
   call Ver_DoRevert(l:filename)
-  if (w:kgy_filetype == "diff")
+  if (exists("w:kgy_filetype") && w:kgy_filetype == "diff")
     call Refreshdiff()
   endif
   let @"=l:saved_reg
