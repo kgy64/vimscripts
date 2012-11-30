@@ -1,4 +1,16 @@
 #!/bin/bash
 #
 
+GIT="`which git`"
+
+test "$GIT" || exit 1
+
+NAME="$1"
+shift
+REV="$1"
+shift
+
+declare -a revs=(`git log -2 $REV -- "$NAME" | grep "^commit " | cut -d " " -f 2`)
+
+echo -n ${revs[1]}
 
