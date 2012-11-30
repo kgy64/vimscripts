@@ -10,7 +10,15 @@ shift
 REV="$1"
 shift
 
-declare -a revs=(`git log -2 $REV -- "$NAME" | grep "^commit " | cut -d " " -f 2`)
+function zero_rev()
+{
+ echo -n "HEAD"
+ exit 0
+}
+
+test "$REV" = "00000000" && zero_rev
+
+declare -a revs=(`git log -2 $REV -- "$NAME" 2>/dev/null | grep "^commit " | cut -d " " -f 2`)
 
 echo -n ${revs[1]}
 

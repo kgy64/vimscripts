@@ -11,7 +11,7 @@
 "
 
 function! Refreshdiff()
-    if (&filetype != "diff" && !empty(expand("%")))
+    if (w:kgy_filetype != "diff" && !empty(expand("%")))
         echo "Error: Not a diff file"
         return
     endif
@@ -28,9 +28,9 @@ function! Refreshdiff()
 endfunction
 
 function! GoToMyFile()
-    if (&filetype != "diff")
-    echo "2 Not a diff file"
-    return
+    if (w:kgy_filetype != "diff")
+      echo "2 Not a diff file"
+      return
     endif
     " Save the value of the unnamed register
     let l:saved_reg = @"
@@ -48,7 +48,7 @@ function! GoToMyFile()
 endfunction
 
 function! GoToFile()
-    if (&filetype != "diff")
+    if (w:kgy_filetype != "diff")
         echo "3 Not a diff file"
         return
     endif
@@ -141,6 +141,8 @@ function! Ver_Blame()
   let l:statusline = 'Blame of ' . l:name . l:display_rev
   let l:statusline .= ' [F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
+  set filetype="blame"
+  let w:kgy_filetype = "blame"
   let @"=l:saved_reg
 endfunction
 
@@ -208,6 +210,8 @@ function! Ver_Blame_Mergeinfo()
   let l:statusline = 'Blame-M of ' . l:name . l:display_rev
   let l:statusline .= ' [A-F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
+  set filetype="blame"
+  let w:kgy_filetype = "blame"
   let @"=l:saved_reg
 endfunction
 
@@ -219,12 +223,14 @@ function! Ver_Diff_Local(name)
   execute "normal! o### Diff of '" . a:name . "', local modifications:"
   execute ":silent! $read! $HOME/bin/vim/do-revision-cmd local " . a:name
   execute ":set filetype=diff"
+  let w:kgy_filetype = "diff"
 endfunction
 
 function! Ver_Diff_Generic_Rev(name, revision)
   execute "normal! o### Diff of '" . a:name . "', revision " . a:revision . ":"
   execute ":silent! $read! $HOME/bin/vim/do-revision-cmd change " . a:name . " -r " . a:revision
   execute ":set filetype=diff"
+  let w:kgy_filetype = "diff"
 endfunction
 
 function! Ver_GotoInDiff(pos)
@@ -321,6 +327,7 @@ function! Ver_Diff_Full_Rev(revision)
   execute "normal! o### svn diff of revision " . a:revision . ":"
   execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change "" -r ' . a:revision
   set filetype=diff
+  let w:kgy_filetype = "diff"
 endfunction
 
 function! Ver_Diff_Full()
@@ -352,6 +359,9 @@ function! Ver_GetRevOfFile()
   let w:kgy_orig_name = l:orig_file_name
   let w:kgy_svn_revision = l:revision
   call cursor(l:currpos, 1)
+  let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:revision . ')'
+  let l:statusline .= ' [F10]+'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
 
@@ -361,7 +371,6 @@ map <F10> :call Ver_GetRevOfFile()<CR>
 
 function! Ver_GetPrevRevOfFile()
   let l:saved_reg = @"
-  let l:filetype = &ft
   if exists("w:kgy_orig_name")
     let l:filename = w:kgy_orig_name
   else
@@ -370,7 +379,7 @@ function! Ver_GetPrevRevOfFile()
   if exists("w:kgy_svn_revision")
     let l:revision = w:kgy_svn_revision
   else
-    if l:filetype == "diff"
+    if (w:kgy_filetype == "diff" || w:kgy_filetype == "blame")
       let l:revision = expand("<cword>")
     else
       let l:revision = ''
@@ -467,8 +476,7 @@ endfunction
 
 function! Ver_Revert()
   let l:saved_reg = @"
-  let l:filename = expand("%")
-  if empty(l:filename)
+  if (w:kgy_filetype == "diff")
     let l:curpos = line(".")
     if exists("w:kgy_row_offset")
         let l:currpos -= w:kgy_row_offset
@@ -481,11 +489,17 @@ function! Ver_Revert()
     normal w
     let l:filename = expand("<cfile>")
     call cursor(l:curpos, 1)
+  else
+    let l:filename = expand("%")
+    if empty(l:filename)
+      execute 'echo "Error: wrong filetype."'
+      return
+    endif
   endif
   call Ver_DoRevert(l:filename)
-"  if (&filetype == "diff")
-"    call Refreshdiff()
-"  endif
+  if (w:kgy_filetype == "diff")
+    call Refreshdiff()
+  endif
   let @"=l:saved_reg
 endfunction
 
