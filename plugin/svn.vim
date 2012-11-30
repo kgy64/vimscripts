@@ -21,7 +21,7 @@ function! Refreshdiff()
     normal ggdG
     r !sd 2>/dev/null
     normal ggdd
-    set filetype=diff
+    execute ':set filetype=diff'
     call cursor(orig_lineno,0)
     " Restore the value of the unnamed register
     let @"=l:saved_reg
@@ -109,6 +109,7 @@ nmap <Leader>d :call OpenDiff()<CR>
 function! Ver_Blame()
   let l:saved_reg = @"
   let l:name = expand("%")
+  let l:filetype=&ft
   if empty(l:name)
     if !exists("w:kgy_orig_name")
       execute 'echo "Error: incorrect file"'
@@ -141,7 +142,7 @@ function! Ver_Blame()
   let l:statusline = 'Blame of ' . l:name . l:display_rev
   let l:statusline .= ' [F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
-  set filetype="blame"
+  execute ':set filetype=' . l:filetype
   let w:kgy_filetype = "blame"
   let @"=l:saved_reg
 endfunction
@@ -178,6 +179,7 @@ map <S-F12> :call Ver_Log_Rev()<CR>
 function! Ver_Blame_Mergeinfo()
   let l:saved_reg = @"
   let l:name = expand("%")
+  let l:filetype=&ft
   if empty(l:name)
     if !exists("w:kgy_orig_name")
       execute 'echo "Error: incorrect file"'
@@ -210,7 +212,7 @@ function! Ver_Blame_Mergeinfo()
   let l:statusline = 'Blame-M of ' . l:name . l:display_rev
   let l:statusline .= ' [A-F12]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
-  set filetype="blame"
+  execute ':set filetype=' . l:filetype
   let w:kgy_filetype = "blame"
   let @"=l:saved_reg
 endfunction
@@ -326,7 +328,7 @@ endfunction
 function! Ver_Diff_Full_Rev(revision)
   execute "normal! o### svn diff of revision " . a:revision . ":"
   execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change "" -r ' . a:revision
-  set filetype=diff
+  execute ':set filetype=diff'
   let w:kgy_filetype = "diff"
 endfunction
 
@@ -348,6 +350,7 @@ map <F11> :call Ver_Diff_Full()<CR>
 
 function! Ver_GetRevOfFile()
   let l:saved_reg = @"
+  let l:filetype=&ft
   let l:revision = expand("<cword>")
   let l:orig_file_name = w:kgy_orig_name
   let l:currpos = line(".")
@@ -362,6 +365,7 @@ function! Ver_GetRevOfFile()
   let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:revision . ')'
   let l:statusline .= ' [F10]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
+  execute ':set filetype=' . l:filetype
   let @"=l:saved_reg
 endfunction
 
@@ -371,6 +375,7 @@ map <F10> :call Ver_GetRevOfFile()<CR>
 
 function! Ver_GetPrevRevOfFile()
   let l:saved_reg = @"
+  let l:filetype=&ft
   if exists("w:kgy_orig_name")
     let l:filename = w:kgy_orig_name
   else
@@ -398,6 +403,7 @@ function! Ver_GetPrevRevOfFile()
   let l:statusline = 'File ' . l:filename . ' (rev ' . l:prev_revision . ')'
   let l:statusline .= ' [S-F10]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
+  execute ':set filetype=' . l:filetype
   let @"=l:saved_reg
 endfunction
 
@@ -407,14 +413,25 @@ map <S-F10> :call Ver_GetPrevRevOfFile()<CR>
 
 function! Ver_Cat()
   let l:saved_reg = @"
-  let l:filename = expand("%")
+  if exists("w:kgy_orig_name")
+    let l:filename = w:kgy_orig_name
+  else
+    let l:filename = expand("%")
+  endif
+  let l:filetype=&ft
   let l:currpos = line(".")
   if exists("w:kgy_row_offset")
       let l:currpos -= w:kgy_row_offset
   endif
   new
   execute ':silent! $read ! svn cat ' . l:filename
+  let w:kgy_orig_name = l:filename
+  let w:kgy_svn_revision = "HEAD"
   call cursor(l:currpos, 1)
+  let l:statusline = 'File ' . l:filename . ' (rev ' . w:kgy_svn_revision . ')'
+  let l:statusline .= ' [A-F10]+'
+  execute ':setl statusline=' . escape(l:statusline, ' \')
+  execute ':set filetype=' . l:filetype
   let @"=l:saved_reg
 endfunction
 
