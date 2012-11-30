@@ -9,7 +9,7 @@ set background=dark
 if exists("syntax_on")
   syntax reset
 endif
-let g:colors_name = "KGy"
+let g:colors_name = "kgy"
 
 highlight Comment	 ctermfg=8						  guifg=#80e080
 highlight Constant	 ctermfg=14			   cterm=none guifg=#00ffff				  gui=none
