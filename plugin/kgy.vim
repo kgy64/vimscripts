@@ -48,7 +48,7 @@ function! Call4Bugtracker()
 endfunction
 
 function! s:create_new_header()
-  let gatename = "__" . substitute(toupper(expand("%:t")), "\\.", "_", "g") . "__"
+  let gatename = "__" . substitute(tr(toupper(expand("%:t")), "-", "_"), "\\.", "_", "g") . "__"
   execute "normal! i#ifndef " . gatename
   execute "normal! o#define " . gatename
   execute "normal! o"
@@ -57,6 +57,7 @@ function! s:create_new_header()
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
   normal! kkk
 endfunction
+
 autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
 
 function! s:create_new_cpp()
@@ -66,6 +67,7 @@ function! s:create_new_cpp()
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
   normal! k
 endfunction
+
 autocmd BufNewFile *.cpp call <SID>create_new_cpp()
 
 function! s:create_new_c()
