@@ -48,7 +48,7 @@ function! Call4Bugtracker()
 endfunction
 
 function! s:create_new_header()
-  let gatename = "__" . substitute(tr(toupper(expand("%:t")), "-", "_"), "\\.", "_", "g") . "__"
+  let gatename = "__" . toupper(tr(expand("%:t"), "+-~.,:;", "_______")) . "_INCLUDED__"
   execute "normal! i#ifndef " . gatename
   execute "normal! o#define " . gatename
   execute "normal! o"
