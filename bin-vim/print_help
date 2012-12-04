@@ -14,6 +14,7 @@ cat <<EOF
 **** revision related commands ****
 
      F8:    Revert of the current file (can be used in diff file too)
+   S-F8:    Update everything to the revision under the cursor
      F9:    Read the svn log of the current file
    S-F9:    Read the given revision of the current file
     F10:    Read the revision under cursor (useful in diff window)

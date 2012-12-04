@@ -94,6 +94,9 @@ case "$COMMAND" in
         test "$yesno" = "yes" || exit 1
         $SVN revert "$NAME" 2>&1
     ;;
+    update)
+        $SVN up "$NAME" $R_REV
+    ;;
     *)
         echo "SVN: Unhandled mode: '$COMMAND'"
         exit 1

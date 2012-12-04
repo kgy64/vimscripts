@@ -526,4 +526,19 @@ endfunction
 
 map <F8> :call Ver_Revert()<CR>
 
+" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function! Ver_UpdateTo()
+  let l:saved_reg = @"
+  if !exists("w:kgy_svn_revision")
+    execute ':echo "Nothing to do!"'
+    return
+  endif
+  execute ':echo "Updating to revision ' . w:kgy_svn_revision . ' ..."'
+  execute ':!$HOME/bin/vim/do-revision-cmd update "." -r ' . w:kgy_svn_revision
+  let @"=l:saved_reg
+endfunction
+
+map <S-F8> :call Ver_UpdateTo()<CR>
+
 " * * * * * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * * *
