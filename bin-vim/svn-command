@@ -10,6 +10,7 @@ function set_svn_root()
  local name="."
  test "$NAME" && name="$NAME"
  local info="`$SVN info "$name" $R_REV 2>/dev/null`"
+ ORIGINAL_REVISION="`echo "$info" | grep "^Revision: " | cut -d " " -f 2`"
  SVN_PATH="`echo "$info" | grep "^URL: " | cut -d " " -f 2`"
  ORIGINAL_PATH="$SVN_PATH"
  SVN_ROOT="`echo "$info" | grep "^Repository Root: " | cut -d " " -f 3`"
@@ -51,11 +52,10 @@ case "$COMMAND" in
         echo "// SVN path: $SVN_PATH"
         echo "// Revision: $REVISION"
         echo
-        if test "$REVISION"; then
-            $SVN blame "$NAME" -r "$REVISION" 2>&1
-        else
-            $SVN blame "${NAME}@HEAD" 2>&1
-        fi
+        rev="@"
+        test "$ORIGINAL_REVISION" && rev=" -r $ORIGINAL_REVISION"
+        test "$R_REV" && rev=" $R_REV"
+        $SVN blame "$NAME"$rev 2>&1
     ;;
     change)
         set_svn_path
