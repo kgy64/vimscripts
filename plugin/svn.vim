@@ -159,12 +159,16 @@ endfunction
 function! Ver_Log_Rev()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
+  let l:name = '.'
+  if exists("w:kgy_orig_name")
+    let l:name = w:kgy_orig_name
+  endif
   if empty(l:revision)
     execute 'echo "Error: no revision number under cursor"'
     return
   endif
   new
-  call Ver_Log_Generic(".", l:revision)
+  call Ver_Log_Generic(l:name, l:revision)
   normal ggdd
   let l:statusline = 'Log of revision ' . l:revision
   let l:statusline .= ' [S-F12]+'

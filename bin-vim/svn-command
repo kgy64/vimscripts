@@ -11,9 +11,15 @@ function set_svn_root()
  test "$NAME" && name="$NAME"
  local info="`$SVN info "$name" $R_REV 2>/dev/null`"
  SVN_PATH="`echo "$info" | grep "^URL: " | cut -d " " -f 2`"
- test "$REVISION" && SVN_PATH="`$HOME/bin/vim/do-find-revision-root $REVISION`"
  ORIGINAL_PATH="$SVN_PATH"
  SVN_ROOT="`echo "$info" | grep "^Repository Root: " | cut -d " " -f 3`"
+}
+
+function set_svn_path()
+{
+ test "$REVISION" || return
+ SVN_PATH="`$HOME/bin/vim/do-find-revision-root $REVISION`"
+ ORIGINAL_PATH="$SVN_PATH"
 }
 
 function not_found()
@@ -41,6 +47,7 @@ set_svn_root
 
 case "$COMMAND" in
     blame)
+        set_svn_path
         echo "// SVN path: $SVN_PATH"
         echo "// Revision: $REVISION"
         echo
@@ -51,6 +58,7 @@ case "$COMMAND" in
         fi
     ;;
     change)
+        set_svn_path
         while true; do
             $SVN diff $SVN_PATH $C_REV
             test $? = 0 && exit
@@ -58,6 +66,7 @@ case "$COMMAND" in
         done
     ;;
     diff)
+        set_svn_path
         while true; do
             $SVN diff $SVN_PATH $R_REV
             test $? = 0 && exit
@@ -78,6 +87,7 @@ case "$COMMAND" in
         fi
     ;;
     revert)
+        set_svn_path
         echo "Path: $SVN_PATH" >&2
         echo "Warning: this operation is irreversible!" >&2
         read -p "Do you want to revert it (yes/no)? " yesno
