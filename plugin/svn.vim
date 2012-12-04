@@ -11,7 +11,7 @@
 "
 
 function! Refreshdiff()
-    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff" && !empty(expand("%")))
+    if (!exists("w:kgy_filetype") || w:kgy_filetype != "diff")
         echo "Error: Not a diff file"
         return
     endif
@@ -28,7 +28,7 @@ function! Refreshdiff()
 endfunction
 
 function! GoToMyFile()
-    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff")
+    if (!exists("w:kgy_filetype") || w:kgy_filetype != "diff")
       echo "2 Not a diff file"
       return
     endif
@@ -48,7 +48,7 @@ function! GoToMyFile()
 endfunction
 
 function! GoToFile()
-    if (exists("w:kgy_filetype") && w:kgy_filetype != "diff")
+    if (!exists("w:kgy_filetype") || w:kgy_filetype != "diff")
         echo "3 Not a diff file"
         return
     endif
