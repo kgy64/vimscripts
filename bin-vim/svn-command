@@ -7,13 +7,11 @@ SVN="`which svn`"
 
 function set_svn_root()
 {
- local info
- if test "$REVISION"; then
-    info="`$SVN info "$NAME" -r $REVISION 2>/dev/null`"
- else
-    info="`$SVN info "$NAME" 2>/dev/null`"
- fi
+ local name="."
+ test "$NAME" && name="$NAME"
+ local info="`$SVN info "$name" $R_REV 2>/dev/null`"
  SVN_PATH="`echo "$info" | grep "^URL: " | cut -d " " -f 2`"
+ test "$REVISION" && SVN_PATH="`$HOME/bin/vim/do-find-revision-root $REVISION`"
  ORIGINAL_PATH="$SVN_PATH"
  SVN_ROOT="`echo "$info" | grep "^Repository Root: " | cut -d " " -f 3`"
 }
@@ -36,7 +34,10 @@ function step_up()
  SVN_PATH="$new_path"
 }
 
-test "$NAME" && set_svn_root
+test "$REVISION" && R_REV="-r $REVISION"
+test "$REVISION" && C_REV="-c $REVISION"
+
+set_svn_root
 
 case "$COMMAND" in
     blame)
@@ -51,30 +52,14 @@ case "$COMMAND" in
     ;;
     change)
         while true; do
-            if test "$REVISION"; then
-                if test "$SVN_PATH"; then
-                    $SVN diff "$SVN_PATH" -c "$REVISION" 2>&1
-                else
-                    $SVN diff -c "$REVISION" 2>&1
-                fi
-            else
-                $SVN diff "$SVN_PATH" 2>&1
-            fi
+            $SVN diff $SVN_PATH $C_REV
             test $? = 0 && exit
             step_up
         done
     ;;
     diff)
         while true; do
-            if test "$REVISION"; then
-                if test "$SVN_PATH"; then
-                    $SVN diff "$SVN_PATH" -r "$REVISION" 2>&1
-                else
-                    $SVN diff -r "$REVISION" 2>&1
-                fi
-            else
-                $SVN diff "$SVN_PATH" 2>&1
-            fi
+            $SVN diff $SVN_PATH $R_REV
             test $? = 0 && exit
             step_up
         done
@@ -86,10 +71,10 @@ case "$COMMAND" in
         $SVN cat "$NAME" -r "$REVISION"
     ;;
     log)
-        if test "$SVN_ROOT"; then
-            $SVN log "$SVN_ROOT" -r "$REVISION"
+        if test "$NAME"; then
+            $SVN log "$NAME" $R_REV
         else
-            $SVN log -r "$REVISION"
+            $SVN log "$SVN_ROOT" $R_REV
         fi
     ;;
     revert)

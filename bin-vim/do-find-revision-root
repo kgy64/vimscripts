@@ -7,21 +7,34 @@ source $HOME/bin/vim/revision-helpers
 
 function find_svn_root()
 {
- local root="${1}"
+ local my_rev
+ test "${1}" && my_rev="-r ${1}"
+ local root="`$SVN info . $my_rev | grep "^URL: " | cut -d " " -f 2`"
  while true
  do
-    local log="`$
+    local log="`$SVN log "$root" -r ${1} | grep -v -e "^---------"`"
+    if test "$log"; then
+        echo -n "$root"
+        return
+    fi
+    local upper="`dirname "$root"`"
+    test "$upper" = "$root" && break
+    root="$upper"
  done
+ echo "Revision ${1} not found!" >&2
+ exit 1
 }
 
-ROOT="$1"
+REVISION="$1"
+
+MODE="`find_revision_control`"
 
 case "$MODE" in
     SVN)
-        find_svn_root "$ROOT"
+        find_svn_root $REVISION
     ;;
     GIT)
-        echo "$ROOT"
+        echo "$REVISION" # ???
     ;;
     *)
         echo "No version control."

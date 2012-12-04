@@ -320,14 +320,14 @@ function! Ver_FindRootPath(revision)
   return system('$HOME/bin/vim/do-find-revision-root ' . a:revision)
 endfunction
 
-function! Ver_Read_Log_Rev(revision)
+function! Ver_Read_Log_Rev(root, revision)
   execute "normal! o### svn log of revision " . a:revision . ":"
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log "" -r ' . a:revision
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log ' . a:root . ' -r ' . a:revision
 endfunction
 
-function! Ver_Diff_Full_Rev(revision)
+function! Ver_Diff_Full_Rev(root, revision)
   execute "normal! o### svn diff of revision " . a:revision . ":"
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change "" -r ' . a:revision
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change ' . a:root . ' -r ' . a:revision
   execute ':set filetype=diff'
   let w:kgy_filetype = "diff"
 endfunction
@@ -335,7 +335,7 @@ endfunction
 function! Ver_Diff_Full()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
-  let l:root_path = call Ver_FindRootPath(l:revision)
+  let l:root_path = '.'
   new
   call Ver_Read_Log_Rev(l:root_path, l:revision)
   normal o
@@ -440,7 +440,7 @@ map <A-F10> :call Ver_Cat()<CR>
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function Ver_Read_Log_File(name)
-  execute "normal! o### svn log of file " . l:name . ":"
+  execute "normal! o### svn log of file " . a:name . ":"
   let w:kgy_orig_name = a:name
   execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd log ' . a:name
 endfunction
