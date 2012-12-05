@@ -47,9 +47,23 @@ function! Call4Bugtracker()
   endif
 endfunction
 
+function! s:create_generic_header()
+  execute "normal! i/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+  execute "normal! o *"
+  execute "normal! o* Project:     "
+  execute "normal! o* Purpose:     "
+  execute "normal! o* Author:      "
+  execute "normal! o* Licence: GPL (see file 'COPYING' in the project root for more details)"
+  execute "normal! o* Comments:    "
+  execute "normal! o*"
+  execute "normal! o* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */"
+  execute "normal! o"
+endfunction
+
 function! s:create_new_header()
-  let gatename = "__" . toupper(tr(expand("%:t"), "+-~.,:;", "_______")) . "_INCLUDED__"
-  execute "normal! i#ifndef " . gatename
+  let gatename = "__" . toupper(tr(expand("%"), "+-~.,:;/", "________")) . "_INCLUDED__"
+  call s:create_generic_header()
+  execute "normal! o#ifndef " . gatename
   execute "normal! o#define " . gatename
   execute "normal! o"
   execute "normal! o#endif /* " . gatename . " */"
@@ -62,7 +76,8 @@ autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
 
 function! s:create_new_cpp()
   let headername = substitute(expand("%:t"), "\\.cpp", "", "g") . ".h"
-  execute "normal! i#include \"" . headername . "\""
+  call s:create_generic_header()
+  execute "normal! o#include \"" . headername . "\""
   execute "normal! o"
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
   normal! k
@@ -72,7 +87,8 @@ autocmd BufNewFile *.cpp call <SID>create_new_cpp()
 
 function! s:create_new_c()
   let headername = substitute(expand("%:t"), "\\.c", "", "g") . ".h"
-  execute "normal! i#include \"" . headername . "\""
+  call s:create_generic_header()
+  execute "normal! o#include \"" . headername . "\""
   execute "normal! o"
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
   normal! k
