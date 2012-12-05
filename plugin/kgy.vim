@@ -53,7 +53,7 @@ function! s:create_generic_header()
   execute "normal! o* Project:     "
   execute "normal! o* Purpose:     "
   execute "normal! o* Author:      "
-  execute "normal! o* Licence: GPL (see file 'COPYING' in the project root for more details)"
+  execute "normal! o* Licence:     GPL (see file 'COPYING' in the project root for more details)"
   execute "normal! o* Comments:    "
   execute "normal! o*"
   execute "normal! o* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */"
