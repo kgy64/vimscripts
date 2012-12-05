@@ -354,22 +354,34 @@ map <F11> :call Ver_Diff_Full()<CR>
 
 function! Ver_GetRevOfFile()
   let l:saved_reg = @"
-  let l:filetype=&ft
-  let l:revision = expand("<cword>")
-  let l:orig_file_name = w:kgy_orig_name
-  let l:currpos = line(".")
-  if exists("w:kgy_row_offset")
-    let l:currpos -= w:kgy_row_offset
+  if exists("w:kgy_filetype") && w:kgy_filetype == "blame"
+    let l:filetype=&ft
+    let l:revision = expand("<cword>")
+    let l:orig_file_name = w:kgy_orig_name
+    let l:currpos = line(".")
+    if exists("w:kgy_row_offset")
+      let l:currpos -= w:kgy_row_offset
+    endif
+    new
+    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
+    let w:kgy_orig_name = l:orig_file_name
+    let w:kgy_svn_revision = l:revision
+    call cursor(l:currpos, 1)
+    let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:revision . ')'
+    let l:statusline .= ' [F10]+'
+    execute ':setl statusline=' . escape(l:statusline, ' \')
+    execute ':set filetype=' . l:filetype
+  else
+    let l:filename = expand("%")
+    if exists("w:kgy_orig_name")
+      let l:filename = w:kgy_orig_name
+    endif
+    let l:revision = ''
+    if exists ("w:kgy_svn_revision")
+      let l:revision = ' -r ' . w:kgy_svn_revision
+    endif
+    execute ':!$HOME/bin/vim/do-revision-cmd show-revision ' . l:filename . l:revision
   endif
-  new
-  execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
-  let w:kgy_orig_name = l:orig_file_name
-  let w:kgy_svn_revision = l:revision
-  call cursor(l:currpos, 1)
-  let l:statusline = 'File ' . l:orig_file_name . ' (rev ' . l:revision . ')'
-  let l:statusline .= ' [F10]+'
-  execute ':setl statusline=' . escape(l:statusline, ' \')
-  execute ':set filetype=' . l:filetype
   let @"=l:saved_reg
 endfunction
 

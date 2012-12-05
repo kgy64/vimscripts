@@ -17,7 +17,7 @@ cat <<EOF
    S-F8:    Update everything to the revision under the cursor
      F9:    Read the svn log of the current file
    S-F9:    Read the given revision of the current file
-    F10:    Read the revision under cursor (useful in diff window)
+    F10:    Read the revision under cursor (in diff window), or displays the current
   S-F10:    Read the previous revision as F10 does
   A-F10:    Read the original version of the current file from svn
     F11:    Full log and diff of the revision under the cursor (useful in diff window)

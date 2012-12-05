@@ -41,6 +41,16 @@ function step_up()
  SVN_PATH="$new_path"
 }
 
+function display_revision()
+{
+ local name="${1}"
+ local rev="${2}"
+ local info="`$SVN info "$name" $rev 2>/dev/null`"
+ local current="`echo "$info" | grep "^Revision: " | cut -d " " -f 2`"
+ local last_mod="`echo "$info" | grep "^Last Changed Rev" | cut -d " " -f 4`"
+ echo "Revision: $current, last changed at $last_mod"
+}
+
 test "$REVISION" && R_REV="-r $REVISION"
 test "$REVISION" && C_REV="-c $REVISION"
 
@@ -96,6 +106,9 @@ case "$COMMAND" in
     ;;
     update)
         $SVN up "$NAME" $R_REV
+    ;;
+    show-revision)
+        display_revision "$NAME" "$R_REV"
     ;;
     *)
         echo "SVN: Unhandled mode: '$COMMAND'"
