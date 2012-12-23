@@ -27,6 +27,12 @@ case "$COMMAND" in
     cat)
         $GIT show "$REVISION:./$NAME"
     ;;
+    revert)
+        echo "Warning: this operation is irreversible!" >&2
+        read -p "Do you want to revert it (yes/no)? " yesno
+        test "$yesno" = "yes" || exit 1
+        $GIT checkout -- "$NAME"
+    ;;
     *)
         echo "GIT: Unhandled mode: '$COMMAND'"
         exit 1
