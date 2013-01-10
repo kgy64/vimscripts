@@ -49,8 +49,11 @@ endfunction
 
 function! GoToFile()
     if (!exists("w:kgy_filetype") || w:kgy_filetype != "diff")
-        echo "3 Not a diff file"
-        return
+        let l:filetype=&ft
+        if (l:filetype != "diff")
+            echo "3 Not a diff file"
+            return
+        endif
     endif
     " Save the value of the unnamed register
     let l:saved_reg = @"
