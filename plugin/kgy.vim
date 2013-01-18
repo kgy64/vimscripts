@@ -96,12 +96,25 @@ endfunction
 
 autocmd BufNewFile *.c call <SID>create_new_c()
 
+function BoldHtml()
+  execute "normal! a<b></b>"
+  execute "normal! hhh"
+endfunction
+
+function BoldHtml2()
+  execute "normal! a<b></b>:<br>"
+  execute "normal! hhhhhhhh"
+endfunction
+
+nmap ;b :call BoldHtml()<CR>i
+nmap ;c :call BoldHtml2()<CR>i
 nmap ;f :call GoToFileAndLine()<CR>
 nnoremap ;I :call IncludeMe()<CR>
 nnoremap ;d :stjump <C-R>=expand("<cword>")<CR><CR>
 nnoremap ;<C-D> :stjump 
 map <S-F1> i// KGY: szívás ellen: <ESC>
 map <F2> :call Print_MyHelp()<CR>
+map <S-F2> a<b></b><ESC>hhhi
 map <F3> :! ~/bin/vim/update_tags<CR>:cs reset<CR>
 map <S-F3> :w! /tmp/vim-difi<CR>:silent ! kompare /tmp/vim-difi &<CR>
 inoremap <F4> <C-R>=strftime("%F %R")<CR>
