@@ -106,8 +106,19 @@ function BoldHtml2()
   execute "normal! hhhhhhhh"
 endfunction
 
+function RefHtml()
+  execute "normal! a<a href=\"\"></a>"
+  execute "normal! hhhhh"
+endfunction
+
+function NewlineHtml()
+  execute "normal! a<br>"
+endfunction
+
 nmap ;b :call BoldHtml()<CR>i
 nmap ;c :call BoldHtml2()<CR>i
+nmap ;r :call RefHtml()<CR>i
+nmap ;n :call NewlineHtml()<CR>a
 nmap ;f :call GoToFileAndLine()<CR>
 nnoremap ;I :call IncludeMe()<CR>
 nnoremap ;d :stjump <C-R>=expand("<cword>")<CR><CR>
