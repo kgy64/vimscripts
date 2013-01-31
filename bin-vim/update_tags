@@ -14,7 +14,7 @@ then
 	)
 fi
 
-find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.java" >cscope.files
+find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.cc" -o -name "*.java" >cscope.files
 
 /usr/bin/ctags --c++-kinds=+p --fields=+iaS --extra=+q -L cscope.files
 
