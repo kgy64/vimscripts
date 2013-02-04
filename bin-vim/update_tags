@@ -3,7 +3,9 @@
 
 rm -f tags cscope.*
 
-find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" >cscope.dirs
+find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc" >cscope.dirs
+echo "/usr/include" >>cscope.dirs
+echo "/usr/local/include" >>cscope.dirs
 
 if test -e exclude.kgy
 then
