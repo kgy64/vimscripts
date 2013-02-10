@@ -3,7 +3,9 @@
 
 rm -f tags cscope.*
 
-find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" >cscope.dirs
+find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc" >cscope.dirs
+echo "/usr/include" >>cscope.dirs
+echo "/usr/local/include" >>cscope.dirs
 
 if test -e exclude.kgy
 then
@@ -14,7 +16,7 @@ then
 	)
 fi
 
-find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.java" >cscope.files
+find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.cc" -o -name "*.java" >cscope.files
 
 /usr/bin/ctags --c++-kinds=+p --fields=+iaS --extra=+q -L cscope.files
 
