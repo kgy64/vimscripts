@@ -1,6 +1,16 @@
 #!/bin/bash
 #
 
+while test $# -gt 0
+do
+    case "$1" in
+        -c)
+            cached=1
+        ;;
+    esac
+    shift
+done
+
 function do_svn_mode()
 {
  ss | grep "^[AM]" | grep -v "\.vcproj\>" | grep -v "\.sln\>" | awk '{ i=2; while (1) { printf("%s ", $i); if (i>=NF) break; i++ }; printf("\n"); }' | {
@@ -17,7 +27,7 @@ function do_svn_mode()
     elif test ${#files[*]} -gt 0; then
         echo "${#files[*]} files differ." >&2
     fi
-    svn diff "${files[@]}" "$@"
+    svn diff "${files[@]}"
  }
 }
 
@@ -28,8 +38,12 @@ function git_mod_out()
 
 function do_git_mode()
 {
- git diff --relative . "$@" | git_mod_out
- git diff --cached --relative . "$@" | git_mod_out
+ if test "$cached" = "1"; then
+    git show | git_mod_out
+ else
+    git diff --relative . | git_mod_out
+    git diff --cached --relative . | git_mod_out
+ fi
 }
 
 # ---------------------------------------------

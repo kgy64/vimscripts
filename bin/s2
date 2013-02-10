@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 
-sd | gvim --cmd "let w:kgy_filetype=\"diff\"" - 2>/dev/null
+sd "$@" | gvim --cmd "let w:kgy_filetype=\"diff\"" - 2>/dev/null
