@@ -60,4 +60,11 @@ Second character:
 
 Second char with <CTRL>: enter commandline
 
+**** HTML commands ****
+
+  ;b    Bold #1:    <b></b>
+  ;c    Bold #2:    <b></b>:<br>
+  ;r    href:       <a href=""></a>
+  ;n    Newline:    <br>
+
 EOF
