@@ -30,8 +30,8 @@ function copy_one_file()
 function copy_files()
 {
  if test -d "${1}"; then
-    local -a sources
     (
+        local -a sources
         cd "${1}"
         sources=(*)
         mkdir -p "${2}"
@@ -39,12 +39,12 @@ function copy_files()
         local i=0
         while test $i -lt $size; do
             local name="${sources[$i]}"
-            copy_one_file "$name" "${2}/$name" ${3}
+            copy_files "$name" "${2}/$name" ${3}
             i=$(($i+1))
         done
     )
  else
-    copy_one_file "${1}" "${2}"
+    copy_one_file "${1}" "${2}" ${3}
  fi
 }
 
@@ -53,5 +53,5 @@ copy_files bin-vim $HOME/bin/vim
 copy_files plugin $HOME/.vim/plugin
 copy_files vimrc $HOME/.vimrc
 copy_files gvimrc $HOME/.gvimrc
+copy_files omni $HOME/.vim
 copy_files colors /usr/share/vim/vim7?/colors 1
-
