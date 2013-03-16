@@ -66,5 +66,6 @@ Second char with <CTRL>: enter commandline
   ;c    Bold #2:    <b></b>:<br>
   ;r    href:       <a href=""></a>
   ;n    Newline:    <br>
+  ;l    Add an unnumbered list (<ul>...</ul>)
 
 EOF
