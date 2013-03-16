@@ -116,7 +116,7 @@ function NewlineHtml()
 endfunction
 
 function AddListEntry()
-  execute "normal! o\t<li>"
+  execute "normal! O\t<li>"
   execute "normal! o</li>"
   execute "normal! k"
 endfunction
@@ -124,7 +124,6 @@ endfunction
 function AddList()
   execute "normal! o<ul>"
   execute "normal! o</ul>"
-  execute "normal! k\t"
 endfunction
 
 nmap ;b :call BoldHtml()<CR>i
