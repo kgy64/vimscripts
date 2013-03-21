@@ -115,10 +115,24 @@ function NewlineHtml()
   execute "normal! a<br>"
 endfunction
 
+function AddListEntry()
+  execute "normal! O\t<li>"
+  execute "normal! o</li>"
+  execute "normal! k"
+endfunction
+
+function AddList()
+  execute "normal! o<ul>"
+  execute "normal! o</ul>"
+endfunction
+
 nmap ;b :call BoldHtml()<CR>i
 nmap ;c :call BoldHtml2()<CR>i
 nmap ;r :call RefHtml()<CR>i
 nmap ;n :call NewlineHtml()<CR>a
+nmap ;l :call AddList()<CR>
+nmap ;L :call AddListEntry()<CR>o<TAB>
+
 nmap ;f :call GoToFileAndLine()<CR>
 nnoremap ;I :call IncludeMe()<CR>
 nnoremap ;d :stjump <C-R>=expand("<cword>")<CR><CR>
