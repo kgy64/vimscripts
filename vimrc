@@ -26,11 +26,11 @@ set noeb vb t_vb=
 set nocp
 filetype plugin on
 let OmniCpp_DisplayMode = 1
-let OmniCpp_ShowScopeInAbbr = 0
+let OmniCpp_ShowScopeInAbbr = 1
 let OmniCpp_NamespaceSearch = 2
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_ShowAccess = 1
-let OmniCpp_SelectFirstItem = 0
+let OmniCpp_SelectFirstItem = 1
 let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
 let OmniCpp_MayCompleteDot = 1      " autocomplete after .
 let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->

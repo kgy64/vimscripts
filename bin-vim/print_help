@@ -5,6 +5,7 @@ cat <<EOF
 **** generic commands ****
 
      F2:    Print this help.
+   S-F2:    Insert a guard for C/C++ header
      F3:    Update cscope/ctags database.
    S-F3:    Open 'kompare' with the current file. Useful for diff files only.
      F4:    Print the current date and time.

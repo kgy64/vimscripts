@@ -36,6 +36,11 @@ function! Print_MyHelp()
   execute ":2"
 endfunction
 
+function! GetGateName()
+  let gatename = "__" . toupper(tr(expand("%"), "+-~.,:;/", "________")) . "_INCLUDED__"
+  return gatename
+endfunction
+
 function! Call4Bugtracker()
   let l:tracker_id = expand("<cword>")
   if l:tracker_id[0] == 'b'
@@ -61,7 +66,7 @@ function! s:create_generic_header()
 endfunction
 
 function! s:create_new_header()
-  let gatename = "__" . toupper(tr(expand("%"), "+-~.,:;/", "________")) . "_INCLUDED__"
+  let gatename = GetGateName()
   call s:create_generic_header()
   execute "normal! o#ifndef " . gatename
   execute "normal! o#define " . gatename
@@ -126,23 +131,25 @@ function AddList()
   execute "normal! o</ul>"
 endfunction
 
-nmap ;b :call BoldHtml()<CR>i
-nmap ;c :call BoldHtml2()<CR>i
-nmap ;r :call RefHtml()<CR>i
-nmap ;n :call NewlineHtml()<CR>a
-nmap ;l :call AddList()<CR>
-nmap ;L :call AddListEntry()<CR>o<TAB>
+nmap    ;b      :call BoldHtml()<CR>i
+nmap    ;c      :call BoldHtml2()<CR>i
+nmap    ;r      :call RefHtml()<CR>i
+nmap    ;n      :call NewlineHtml()<CR>a
+nmap    ;l      :call AddList()<CR>
+nmap    ;L      :call AddListEntry()<CR>o<TAB>
+nmap    ;f      :call GoToFileAndLine()<CR>
 
-nmap ;f :call GoToFileAndLine()<CR>
-nnoremap ;I :call IncludeMe()<CR>
-nnoremap ;d :stjump <C-R>=expand("<cword>")<CR><CR>
+nnoremap ;I     :call IncludeMe()<CR>
+nnoremap ;d     :stjump <C-R>=expand("<cword>")<CR><CR>
 nnoremap ;<C-D> :stjump 
-map <S-F1> i// KGY: szívás ellen: <ESC>
-map <F2> :call Print_MyHelp()<CR>
-map <S-F2> a<b></b><ESC>hhhi
-map <F3> :! ~/bin/vim/update_tags<CR>:cs reset<CR>
-map <S-F3> :w! /tmp/vim-difi<CR>:silent ! kompare /tmp/vim-difi &<CR>
-inoremap <F4> <C-R>=strftime("%F %R")<CR>
+
+inoremap <S-F2> <C-R>=GetGateName()<CR>
+inoremap <F4>   <C-R>=strftime("%F %R")<CR>
 inoremap <S-F4> <C-R>=strftime("%F %R:%S")<CR>
-map <F5> :call Call4Bugtracker()<CR>
+
+map     <S-F1>  i// KGY: szívás ellen: <ESC>
+map     <F2>    :call Print_MyHelp()<CR>
+map     <F3>    :! ~/bin/vim/update_tags<CR>:cs reset<CR>
+map     <S-F3>  :w! /tmp/vim-difi<CR>:silent ! kompare /tmp/vim-difi &<CR>
+map     <F5>    :call Call4Bugtracker()<CR>
 
