@@ -1,5 +1,6 @@
 
 syntax on
+colorscheme kgy
 set background=dark
 set textwidth=120
 
