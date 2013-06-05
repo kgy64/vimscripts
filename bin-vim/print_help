@@ -12,6 +12,11 @@ cat <<EOF
    S-F4:    Same as F4, plus the seconds.
      F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
 
+**** diff related commands ****
+
+     \g:    Go to the original source
+     \r:    Refresh the current diff
+
 **** revision related commands ****
 
      F8:    Revert of the current file (can be used in diff file too)
