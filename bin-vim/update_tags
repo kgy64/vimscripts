@@ -2,22 +2,20 @@
 #
 
 CTAGS_PARAMS="--recurse=yes --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q"
-EXTRA_INCLUDES= # "/usr/include /usr/local/include"
+
+EXTRA_FILE="tags_extra"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 rm -f tags cscope.*
 
 function find_my_include_dirs()
 {
 	find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc"
-	for name in $EXTRA_INCLUDES
-	do
-		echo "$name"
-	done
+	test -f $EXTRA_FILE && grep -v -e "^#" -e "^$" $EXTRA_FILE
 }
 
 find_my_include_dirs >cscope.dirs
-echo "/usr/include" >>cscope.dirs
-echo "/usr/local/include" >>cscope.dirs
 
 if test -e extra.dirs
 then
@@ -34,7 +32,7 @@ then
 	)
 fi
 
-find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.cpp" -o -name "*.cc" -o -name "*.java" >cscope.files
+find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.[ch]pp" -o -name "*.cc" -o -name "*.java" >cscope.files
 for pattern in c h cc cpp java
 do
 	name=`ls *.$pattern 2>/dev/null`
