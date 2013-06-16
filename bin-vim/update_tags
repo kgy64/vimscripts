@@ -7,6 +7,9 @@ EXTRA_FILE="tags_extra"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+CTAGS=`which ctags`
+CSCOPE=`which cscope`
+
 rm -f tags cscope.*
 
 function find_my_include_dirs()
@@ -39,10 +42,14 @@ do
 	test "$name" && echo "$name" >>cscope.files 2>/dev/null
 done
 
-/usr/bin/ctags $CTAGS_PARAMS -L cscope.files
+# Do the job: ----------------------
+
+$CTAGS $CTAGS_PARAMS -L cscope.files
 
 sed -i -e "s/ /\\\\ /g" cscope.files
-/usr/bin/cscope -R -b -q
+$CSCOPE -R -b -q
+
+# Delete temporaries: --------------
 
 rm cscope.files cscope.dirs
 
