@@ -54,8 +54,8 @@ endfunction
 
 function! s:create_generic_header()
   r !~/bin/vim/generic-header
-" execute ":1"
-" normal! dd
+  execute ":1"
+  normal! dd
   execute ":$"
 endfunction
 
