@@ -53,13 +53,14 @@ function! Call4Bugtracker()
 endfunction
 
 function! s:create_generic_header()
-  r !~/bin/vim/generic-header
-  execute ":1"
-  normal! dd
-  execute ":$"
+  execute ':silent! $read ! ~/bin/vim/generic-header'
+  execute ":silent 1"
+  normal dd
+  execute ":silent $"
 endfunction
 
 function! s:create_new_header()
+  let l:saved_reg = @"
   let gatename = GetGateName()
   call s:create_generic_header()
   execute "normal! o#ifndef " . gatename
@@ -68,29 +69,34 @@ function! s:create_new_header()
   execute "normal! o#endif /* " . gatename . " */"
   execute "normal! o"
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
-  normal! kkk
+  normal kkk
+  let @"=l:saved_reg
 endfunction
 
 autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
 
 function! s:create_new_cpp()
+  let l:saved_reg = @"
   let headername = substitute(expand("%:t"), "\\.cpp", "", "g") . ".h"
   call s:create_generic_header()
   execute "normal! o#include \"" . headername . "\""
   execute "normal! o"
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
-  normal! k
+  execute "normal! k"
+  let @"=l:saved_reg
 endfunction
 
 autocmd BufNewFile *.cpp call <SID>create_new_cpp()
 
 function! s:create_new_c()
+  let l:saved_reg = @"
   let headername = substitute(expand("%:t"), "\\.c", "", "g") . ".h"
   call s:create_generic_header()
   execute "normal! o#include \"" . headername . "\""
   execute "normal! o"
   execute "normal! o/* * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * */"
-  normal! k
+  normal k
+  let @"=l:saved_reg
 endfunction
 
 autocmd BufNewFile *.c call <SID>create_new_c()
