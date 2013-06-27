@@ -53,9 +53,9 @@ function! Call4Bugtracker()
 endfunction
 
 function! s:create_generic_header()
-  execute ":r ~/bin/vim/generic-header"
-  execute ":1"
-  normal! dd
+  r !~/bin/vim/generic-header
+" execute ":1"
+" normal! dd
   execute ":$"
 endfunction
 
