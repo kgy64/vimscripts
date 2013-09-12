@@ -12,31 +12,81 @@ CSCOPE=`which cscope`
 
 rm -f tags cscope.*
 
-function find_my_include_dirs()
-{
-	find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc"
-	test -f $EXTRA_FILE && grep -v -e "^#" -e "^$" $EXTRA_FILE
-}
+find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc" >cscope.dirs
 
-find_my_include_dirs >cscope.dirs
-
-if test -e extra.dirs
+if test -e "$EXTRA_FILE"
 then
-	cat extra.dirs | (
-		read name
-		case ${name:0:1} in
-			+)
-				echo "${name:1}" >>cscope.dirs
-			;;
-			-)
-				sed -i -e "s%./${name:1}\>%%" cscope.dirs
-			;;
-		esac
-	)
+    grep -v -e "^#" -e "^$" "$EXTRA_FILE" | (
+        while read name
+        do
+            case ${name:0:1} in
+                +)
+                    echo "${name:1}" >>cscope.dirs
+                ;;
+                -)
+                    sed -i -e "s%./${name:1}\>%%" cscope.dirs
+                ;;
+                *)
+                    echo "Warning: line ignored in $EXTRA_FILE: '$name'"
+                ;;
+            esac
+        done
+    )
 fi
 
-find -L `cat cscope.dirs` -name "*.[ch]" -o -name "*.[ch]pp" -o -name "*.cc" -o -name "*.java" >cscope.files
-for pattern in c h cc cpp java
+function scan_source_dirs()
+{
+    while read line
+    do
+        local -a words=($line)
+        local dir="${words[0]}"
+        local -a find_params=()
+        if test ${#words[*]} = 1; then
+            find_params[0]="("
+            find_params[1]="-name"
+            find_params[2]="*.[ch]"
+            find_params[3]="-o"
+            find_params[4]="-name"
+            find_params[5]="*.[ch]pp"
+            find_params[6]="-o"
+            find_params[7]="-name"
+            find_params[8]="*.cc"
+            find_params[9]="-o"
+            find_params[10]="-name"
+            find_params[11]="*.hh"
+            find_params[12]="-o"
+            find_params[13]="-name"
+            find_params[14]="*.java"
+            find_params[15]=")"
+        else
+            local i=1
+            local j=0
+            while test $i -lt ${#words[*]}; do
+                if test $i != 1; then
+                    find_params[$j]="("
+                    j=$(($j+1))
+                    find_params[$j]="-o"
+                    j=$(($j+1))
+                fi
+                local name="${words[$i]}"
+                find_params[$j]="-name"
+                j=$(($j+1))
+                find_params[$j]="${name//\"/}"
+                j=$(($j+1))
+                i=$(($i+1))
+            done
+            if test $j -gt 2; then
+                find_params[$j]=")"
+                j=$(($j+1))
+            fi
+        fi
+        find "$dir" -type f -a "${find_params[@]}"
+    done
+}
+
+scan_source_dirs <cscope.dirs >cscope.files
+
+for pattern in c h cc hh cpp hpp java
 do
 	name=`ls *.$pattern 2>/dev/null`
 	test "$name" && echo "$name" >>cscope.files 2>/dev/null
