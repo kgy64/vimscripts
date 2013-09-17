@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+
+filter="grep -v ^?"
+
+while test $# -ge 1
+do
+	case "$1" in
+		-?)
+			filter=cat
+		;;
+		*)
+			echo "Unknown option: '$1'"
+			exit 1
+		;;
+	esac
+	shift
+done
+
+if test -d "./.svn"
+then
+	svn status | tr "\\\\" "/" | $filter
+elif test -d "./.git"
+then
+	git status | tr "\\\\" "/" | grep "\<modified:" | awk '{ print $3 }'
+fi
+
