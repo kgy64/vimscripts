@@ -1,9 +1,11 @@
 #!/bin/sh
 #
 
+test -x $HOME/project-info && . $HOME/project-info
 test -x ./project-info && . ./project-info
 
 test "$COPYING" || COPYING="COPYING"
+test "$LICENCE" || LICENCE="GPL (see file '$COPYING' in the project root for more details)"
 
 cat <<EOF
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -11,7 +13,7 @@ cat <<EOF
  * Project:     $PROJECT
  * Purpose:     $PURPOSE
  * Author:      $AUTHOR
- * Licence:     GPL (see file '$COPYING' in the project root for more details)
+ * Licence:     $LICENCE
  * Comments:    $COMMENT
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

@@ -37,8 +37,8 @@ function! Print_MyHelp()
 endfunction
 
 function! GetGateName()
-  let gatename = "__" . toupper(tr(expand("%"), "+-~.,:;/", "________")) . "_INCLUDED__"
-  return gatename
+  let l:res = system("~/bin/vim/gate_name " . expand("%") . " " . expand("%:p"))
+  return substitute(l:res, '\n', '', '')
 endfunction
 
 function! Call4Bugtracker()
