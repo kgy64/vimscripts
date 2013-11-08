@@ -3,7 +3,9 @@
 
 function find_revision_control()
 {
- local DIR="${1}"
+ local DIR="$1"
+
+ test "$DIR" = "." && DIR="`pwd`"
 
  test -d "$DIR/.svn" && echo "SVN" && return
  test -d "$DIR/.git" && echo "GIT" && return

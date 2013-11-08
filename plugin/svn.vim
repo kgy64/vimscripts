@@ -327,14 +327,14 @@ function! Ver_FindRootPath(revision)
   return system('$HOME/bin/vim/do-find-revision-root ' . a:revision)
 endfunction
 
-function! Ver_Read_Log_Rev(root, revision)
+function! Ver_Read_Log_Rev(file_path, revision)
   execute "normal! o### svn log of revision " . a:revision . ":"
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log ' . a:root . ' -r ' . a:revision
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd log ' . a:file_path . ' -r ' . a:revision
 endfunction
 
-function! Ver_Diff_Full_Rev(root, revision)
+function! Ver_Diff_Full_Rev(file_path, revision)
   execute "normal! o### svn diff of revision " . a:revision . ":"
-  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change ' . a:root . ' -r ' . a:revision
+  execute ':silent! $read! $HOME/bin/vim/do-revision-cmd change ' . a:file_path . ' -r ' . a:revision
   execute ':set filetype=diff'
   let w:kgy_filetype = "diff"
 endfunction
@@ -342,11 +342,11 @@ endfunction
 function! Ver_Diff_Full()
   let l:saved_reg = @"
   let l:revision = expand("<cword>")
-  let l:root_path = '.'
+  let l:file_path = w:kgy_orig_name
   new
-  call Ver_Read_Log_Rev(l:root_path, l:revision)
+  call Ver_Read_Log_Rev(l:file_path, l:revision)
   normal o
-  call Ver_Diff_Full_Rev(l:root_path, l:revision)
+  call Ver_Diff_Full_Rev(l:file_path, l:revision)
   normal ggdd
   let @"=l:saved_reg
 endfunction

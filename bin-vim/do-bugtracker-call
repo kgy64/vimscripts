@@ -1,6 +1,8 @@
 #!/bin/bash
 #
 
+URL="http://bug.corp.yahoo.com/show_bug.cgi?id="
+
 function check_browser()
 {
 	test "$BROWSER" && return
@@ -14,5 +16,5 @@ check_browser "konqueror"
 
 test "$BROWSER" || exit 1
 
-$BROWSER http://bugtracker.igomyway.com/view.php?id=$1 &
+$BROWSER $URL$1 &
 

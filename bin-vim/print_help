@@ -21,17 +21,17 @@ cat <<EOF
 
      F8:    Revert of the current file (can be used in diff file too)
    S-F8:    Update everything to the revision under the cursor
-     F9:    Read the svn log of the current file
+     F9:    Read the version control log of the current file
    S-F9:    Read the given revision of the current file
     F10:    Read the revision under cursor (in diff window), or displays the current
   S-F10:    Read the previous revision as F10 does
-  A-F10:    Read the original version of the current file from svn
+  A-F10:    Read the original version of the current file from version control
     F11:    Full log and diff of the revision under the cursor (useful in diff window)
   S-F11:    Diff of the current file only, revision under the cursor (useful in diff window)
   A-F11:    Local modifications of the current file
-    F12:    'svn blame' of the current file
-  S-F12:    'svn log' of the revision under the cursor (useful in diff window)
-  A-F12:    'svn blame' with mergeinfo of the current file
+    F12:    'blame' of the current file
+  S-F12:    'log' of the revision under the cursor (useful in diff window)
+  A-F12:    'blame' with mergeinfo of the current file (implemented for svn)
 
 **** ctags commands ****
 
