@@ -4,10 +4,13 @@
 FILENAME="${1}"
 PATHNAME="${2}"
 
-test -x $HOME/bin/show_gate_name && {
-    $HOME/bin/show_gate_name "$FILENAME" "$PATHNAME"
-    exit
-}
+for dir in . $HOME/bin
+do
+    test -x $dir/show_gate_name && {
+        $dir/show_gate_name "$FILENAME" "$PATHNAME"
+        exit
+    }
+done
 
 echo __"$FILENAME"_INCLUDED__ | tr "[a-z]+\\\\-\\\\~\\\\.,:;/" "[A-Z]________"
 
