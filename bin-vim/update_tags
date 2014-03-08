@@ -1,6 +1,8 @@
 #!/bin/bash
 #
 
+FILE_PATTERN=".[ch] .[ch]pp .cc .hh .java"
+
 CTAGS_PARAMS="--recurse=yes --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q"
 
 EXTRA_FILE="tags-extra"
@@ -9,10 +11,20 @@ EXTRA_FILE="tags-extra"
 
 CTAGS=`which ctags`
 CSCOPE=`which cscope`
+TMPFILE="/tmp/find-cscope-$$-tmp"
+
+INPUT_PATTERN="( "
+OR_SEPARATOR=
+for pattern in $FILE_PATTERN
+do
+    INPUT_PATTERN="$INPUT_PATTERN$OR_SEPARATOR -name *$pattern"
+    OR_SEPARATOR=" -o"
+done
+INPUT_PATTERN="$INPUT_PATTERN )"
 
 rm -f tags cscope.*
 
-find -L -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "doc" >cscope.dirs
+find -L -maxdepth 1 -mindepth 1 \( -type d -o -type l \) ! -name ".*" >cscope.dirs 2>/dev/null
 
 if test -e "$EXTRA_FILE"
 then
@@ -24,7 +36,12 @@ then
                     echo "${name:1}" >>cscope.dirs
                 ;;
                 -)
-                    sed -i -e "s%./${name:1}\>%%" cscope.dirs
+                    grep -v "^${name:1}" cscope.dirs >$TMPFILE
+                    rm cscope.dirs
+                    mv $TMPFILE cscope.dirs
+                ;;
+                \#)
+                    # do nothing here
                 ;;
                 *)
                     echo "Warning: line ignored in $EXTRA_FILE: '$name'" >&2
@@ -40,24 +57,12 @@ function scan_source_dirs()
     do
         local -a words=($line)
         local dir="${words[0]}"
-        local -a find_params=()
+        local -a find_params=
         if test ${#words[*]} = 1; then
-            find_params[0]="("
-            find_params[1]="-name"
-            find_params[2]="*.[ch]"
-            find_params[3]="-o"
-            find_params[4]="-name"
-            find_params[5]="*.[ch]pp"
-            find_params[6]="-o"
-            find_params[7]="-name"
-            find_params[8]="*.cc"
-            find_params[9]="-o"
-            find_params[10]="-name"
-            find_params[11]="*.hh"
-            find_params[12]="-o"
-            find_params[13]="-name"
-            find_params[14]="*.java"
-            find_params[15]=")"
+            # find "$dir" -type f -a "${INPUT_PATTERN[@]}"
+            set -f
+            find_params=($INPUT_PATTERN)
+            set +f
         else
             local i=1
             local j=0
@@ -80,17 +85,37 @@ function scan_source_dirs()
                 j=$(($j+1))
             fi
         fi
-        find "$dir" -type f -a "${find_params[@]}"
+        find "$dir/" -type f -a "${find_params[@]}"
     done
 }
 
 scan_source_dirs <cscope.dirs >cscope.files
 
-for pattern in c h cc hh cpp hpp java
+for pattern in $FILE_PATTERN
 do
-	name=`ls *.$pattern 2>/dev/null`
-	test "$name" && echo "$name" >>cscope.files 2>/dev/null
+    ls -1 *$pattern 2>/dev/null | {
+        while read name
+        do
+            echo "./$name" >>cscope.files 2>/dev/null
+        done
+    }
 done
+
+if test -e "$EXTRA_FILE"
+then
+    grep -v -e "^#" -e "^$" "$EXTRA_FILE" | (
+        while read name
+        do
+            case ${name:0:1} in
+                -)
+                    grep -v "^${name:1}" cscope.files >$TMPFILE
+                    rm cscope.files
+                    mv $TMPFILE cscope.files
+                ;;
+            esac
+        done
+    )
+fi
 
 # Do the job: ----------------------
 
@@ -101,5 +126,5 @@ $CSCOPE -R -b -q
 
 # Delete temporaries: --------------
 
-rm cscope.files cscope.dirs
+# rm -f cscope.files cscope.dirs $TMPFILE
 
