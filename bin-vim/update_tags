@@ -3,7 +3,7 @@
 
 CTAGS_PARAMS="--recurse=yes --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q"
 
-EXTRA_FILE="tags_extra"
+EXTRA_FILE="tags-extra"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -27,7 +27,7 @@ then
                     sed -i -e "s%./${name:1}\>%%" cscope.dirs
                 ;;
                 *)
-                    echo "Warning: line ignored in $EXTRA_FILE: '$name'"
+                    echo "Warning: line ignored in $EXTRA_FILE: '$name'" >&2
                 ;;
             esac
         done

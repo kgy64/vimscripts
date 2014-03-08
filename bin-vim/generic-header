@@ -1,11 +1,19 @@
 #!/bin/sh
 #
 
-test -x $HOME/project-info && . $HOME/project-info
-test -x ./project-info && . ./project-info
+function check_info()
+{
+    local path="${1}"
+    local parent="$(dirname "$path")"
+    test "$parent" != "$HOME" && test "$parent" != "/" && check_info "$parent"
+    test -e "$path/project-info" && . "$path/project-info"
+}
+
+check_info "$(pwd)"
 
 test "$COPYING" || COPYING="COPYING"
-test "$LICENCE" || LICENCE="GPL (see file '$COPYING' in the project root for more details)"
+test "$LICENCE" && LICENSE="$LICENCE"
+test "$LICENSE" || LICENSE="GPL (see file '$COPYING' in the project root for more details)"
 
 cat <<EOF
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -13,7 +21,7 @@ cat <<EOF
  * Project:     $PROJECT
  * Purpose:     $PURPOSE
  * Author:      $AUTHOR
- * Licence:     $LICENCE
+ * License:     $LICENSE
  * Comments:    $COMMENT
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

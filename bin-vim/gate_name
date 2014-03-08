@@ -1,13 +1,10 @@
 #!/bin/bash
 #
 
-FILENAME="${1}"
-PATHNAME="${2}"
-
 test -x $HOME/bin/show_gate_name && {
-    $HOME/bin/show_gate_name "$FILENAME" "$PATHNAME"
+    $HOME/bin/show_gate_name "$@"
     exit
 }
 
-echo __"$FILENAME"_INCLUDED__ | tr "[a-z]+\\\\-\\\\~\\\\.,:;/" "[A-Z]________"
+echo __"$1"_INCLUDED__ | tr "[a-z]+\\-\\~\\.,:;/" "[A-Z]________"
 
