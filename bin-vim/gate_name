@@ -1,10 +1,13 @@
 #!/bin/bash
 #
 
-test -x $HOME/bin/show_gate_name && {
-    $HOME/bin/show_gate_name "$@"
-    exit
-}
+for dir in . $HOME/bin
+do
+    test -x $dir/show_gate_name && {
+        $dir/show_gate_name "$@"
+        exit
+    }
+done
 
 echo __"$1"_INCLUDED__ | tr "[a-z]+\\-\\~\\.,:;/" "[A-Z]________"
 
