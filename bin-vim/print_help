@@ -17,6 +17,13 @@ cat <<EOF
      \g:    Go to the original source
      \r:    Refresh the current diff
 
+**** Pyclewn ****
+
+     F6:    Start a Pyclewn session
+   S-F6:    Enter file to debug with Pyclewn (after A-F9)
+   A-F6:    Interrupt the program being debugged
+     F7:    Start debugging (after S-F6)
+
 **** revision related commands ****
 
      F8:    Revert of the current file (can be used in diff file too)
