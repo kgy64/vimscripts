@@ -17,13 +17,6 @@ cat <<EOF
      \g:    Go to the original source
      \r:    Refresh the current diff
 
-**** Pyclewn ****
-
-     F6:    Start a Pyclewn session
-   S-F6:    Enter file to debug with Pyclewn (after A-F9)
-   A-F6:    Interrupt the program being debugged
-     F7:    Start debugging (after S-F6)
-
 **** revision related commands ****
 
      F8:    Revert of the current file (can be used in diff file too)
@@ -81,5 +74,21 @@ Second char with <CTRL>: enter commandline
   ;n    Newline:    <br>
   ;l    Add an unnumbered list (<ul>...</ul>)
   ;L    Add an entry for above list (<li>...</li>)
+
+**** Pyclewn ****
+
+     F6:    Start a Pyclewn session (see http://pyclewn.sourceforge.net for installation)
+            Note that such a session has its own key mapping as follows:
+     F6:    Build the project (start 'make', enter its parameters manually)
+     F5:    Starts the application (enter the executable path manually). Stops at main() by default.
+   S-F5:    Restarts the already loaded executable.
+     F3:    Break the running application
+     F4:    Continue
+     F9:    Set breakpoint at the cursor
+   S-F9:    Clear breakpoint at the cursor
+    F10:    Step Over
+    F11:    Step Into
+   C-UP:    Up one level in the call stack
+ C-DOWN:    Down one level in the call stack
 
 EOF
