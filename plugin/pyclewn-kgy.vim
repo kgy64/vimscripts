@@ -12,7 +12,7 @@ function! StartPyclewn()
     map     <F4>    :Ccontinue<CR>
     map     <F8>    :Cdbgvar 
     map     <S-F8>  :exe "Cfoldvar " . line(".")<CR>
-    map     <A-F8>  :exe "Cdelvar " . line(".")<CR>
+    map     <A-F8>  0llll:exe "Cdelvar " . expand("<cword>")<CR>
     map     <F9>    <C-B>
     map     <S-F9>  <C-E>
     map     <F10>   :Cnext<CR>
