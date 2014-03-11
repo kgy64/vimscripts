@@ -56,4 +56,4 @@ copy_files doc $HOME/.vim/doc
 copy_files vimrc $HOME/.vimrc
 copy_files gvimrc $HOME/.gvimrc
 copy_files omni $HOME/.vim
-copy_files colors /usr/share/vim/vim7?/colors 1
+copy_files colors $HOME/.vim/colors
