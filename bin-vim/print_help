@@ -80,8 +80,10 @@ Second char with <CTRL>: enter commandline
      F6:    Start a Pyclewn session (see http://pyclewn.sourceforge.net for installation)
             Note that such a session has its own key mapping as follows:
      F6:    Build the project (start 'make', enter its parameters manually)
-     F5:    Starts the application (enter the executable path manually). Stops at main() by default.
-   S-F5:    Restarts the already loaded executable.
+     F7:    Displays backtrace for all threads (if the program has been stopped: see F3 to stop)
+   S-F7:    Used in the backtrace window, jumps to the function under cursor
+     F5:    Starts the application (enter the executable path manually). Stops at main() by default
+   S-F5:    Restarts the already loaded executable
      F3:    Break the running application
      F4:    Continue
      F9:    Set breakpoint at the cursor
