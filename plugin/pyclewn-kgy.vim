@@ -1,5 +1,4 @@
-"
-"
+"   My extensions for Pyclewn
 "
 
 function! GoToThreadFunction()
@@ -10,8 +9,8 @@ function! GoToThreadFunction()
     let l:i = 0
     while match(l:str, "Thread", 0) == -1
         if (l:i > 200)
-          let @"=l:saved_reg
-          return
+            let @"=l:saved_reg
+            return
         endif
         normal -
         let l:i = l:i + 1
@@ -25,10 +24,19 @@ function! GoToThreadFunction()
     let @"=l:saved_reg
 endfunction
 
+function SetUpTtyOut()
+    if has('gui_running')
+        execute ":Cshell setsid xterm -e inferior_tty.py &"
+    else
+        let tty_name = input('Enter terminal name: ')
+        execute ":Cset inferior-tty " . tty_name
+    endif
+endfunction
+
 function! StartPyclewn()
     execute ':Pyclewn'
     execute ':Cmapkeys'
-    map     <S-F2>  :Cset inferior-tty 
+    map     <S-F2>  :call SetUpTtyOut()<CR>
     map     <F6>    :make 
     map     <F5>    :Cfile 
     map     <S-F5>  :Cstart 
@@ -52,6 +60,4 @@ endfunction
 " --------------------------------------------------
 
 nmap    <F6>    :call StartPyclewn()<CR>
-" nmap    <S-F6>  :Cfile 
-" nmap    <A-F6>  :Csigint<CR>
-" nmap    <F7>    :Cstart<CR>
+
