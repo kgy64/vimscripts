@@ -28,13 +28,16 @@ endfunction
 function! StartPyclewn()
     execute ':Pyclewn'
     execute ':Cmapkeys'
+    map     <S-F2>  :Cset inferior-tty 
     map     <F6>    :make 
     map     <F5>    :Cfile 
     map     <S-F5>  :Cstart 
     map     <F3>    :Csigint<CR>
     map     <F4>    :Ccontinue<CR>
+    map     <S-F4>  :Cprint 
     map     <F7>    :Cthread apply all backtrace<CR>
     map     <S-F7>  :call GoToThreadFunction()<CR>
+    map     <A-F7>  :Cbt<CR>
     map     <F8>    :Cdbgvar 
     map     <S-F8>  :exe "Cfoldvar " . line(".")<CR>
     map     <A-F8>  0llll:exe "Cdelvar " . expand("<cword>")<CR>
