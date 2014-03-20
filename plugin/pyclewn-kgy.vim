@@ -36,25 +36,27 @@ endfunction
 function! StartPyclewn()
     execute ':Pyclewn'
     execute ':Cmapkeys'
-    map     <S-F2>  :call SetUpTtyOut()<CR>
-    map     <F6>    :make 
-    map     <F5>    :Cfile 
-    map     <S-F5>  :Cstart 
-    map     <F3>    :Csigint<CR>
-    map     <F4>    :Ccontinue<CR>
-    map     <S-F4>  :Cprint 
-    map     <F7>    :Cthread apply all backtrace<CR>
-    map     <S-F7>  :call GoToThreadFunction()<CR>
-    map     <A-F7>  :Cbt<CR>
-    map     <F8>    :Cdbgvar 
-    map     <S-F8>  :exe "Cfoldvar " . line(".")<CR>
-    map     <A-F8>  0llll:exe "Cdelvar " . expand("<cword>")<CR>
-    map     <F9>    <C-B>
-    map     <S-F9>  <C-E>
-    map     <F10>   :Cnext<CR>
-    map     <F11>   :Cstep<CR>
-    map     <C-Up>  :Cup<CR>
-    map     <C-Down>  :Cdown<CR>
+    map     <S-F2>      :call SetUpTtyOut()<CR>
+    map     <F6>        :make 
+    map     <F5>        :Cfile 
+    map     <S-F5>      :Cstart 
+    map     <F3>        :Csigint<CR>
+    map     <F4>        :Ccontinue<CR>
+    map     <S-F4>      :Cprint 
+    map     <F7>        :Cthread apply all backtrace<CR>
+    map     <S-F7>      :call GoToThreadFunction()<CR>
+    map     <A-F7>      :Cbt<CR>
+    map     <F8>        :Cdbgvar 
+    map     <S-F8>      :exe "Cfoldvar " . line(".")<CR>
+    map     <A-F8>      0llll:exe "Cdelvar " . expand("<cword>")<CR>
+    map     <F9>        <C-B>
+    map     <S-F9>      <C-E>
+    map     <F10>       :Cnext<CR>
+    map     <F11>       :Cstep<CR>
+    map     <C-Up>      :Cup<CR>
+    map     <C-Down>    :Cdown<CR>
+    map     <A-Up>      :cprev<CR>
+    map     <A-Down>    :cnext<CR>
 endfunction
 
 " --------------------------------------------------
