@@ -36,6 +36,16 @@ function! Print_MyHelp()
   execute ":2"
 endfunction
 
+function! InsertMain()
+  let l:saved_reg = @"
+  execute "normal! oint main(int argc, char ** argv)"
+  execute "normal! o{"
+  execute "normal! o}"
+  execute "normal! ko"
+  let @"=l:saved_reg
+  return "\t"
+endfunction
+
 function! GetGateName()
   let l:res = system("~/bin/vim/gate_name " . expand("%") . " " . expand("%:p"))
   return substitute(l:res, '\n', '', '')
@@ -146,6 +156,7 @@ nnoremap ;<C-D> :stjump
 inoremap <S-F2> <C-R>=GetGateName()<CR>
 inoremap <F4>   <C-R>=strftime("%F %R")<CR>
 inoremap <S-F4> <C-R>=strftime("%F %R:%S")<CR>
+inoremap <S-F5> <C-R>=InsertMain()<CR>
 
 map     <S-F1>  i// KGY: szívás ellen: <ESC>
 map     <F2>    :call Print_MyHelp()<CR>

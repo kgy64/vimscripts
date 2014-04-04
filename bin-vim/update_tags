@@ -3,7 +3,7 @@
 
 FILE_PATTERN=".[ch] .[ch]pp .cc .hh .java"
 
-CTAGS_PARAMS="--recurse=yes --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q"
+CTAGS_PARAMS="--recurse=no --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q"
 
 EXTRA_FILE="tags-extra"
 
@@ -119,10 +119,12 @@ fi
 
 # Do the job: ----------------------
 
+sed -i -e "s/^\.\///" cscope.files
+
 $CTAGS $CTAGS_PARAMS -L cscope.files
 
 sed -i -e "s/ /\\\\ /g" cscope.files
-$CSCOPE -R -b -q
+$CSCOPE -b -q -i cscope.files
 
 # Delete temporaries: --------------
 

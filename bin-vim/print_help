@@ -10,6 +10,7 @@ cat <<EOF
      F4:    Print the current date and time.
    S-F4:    Same as F4, plus the seconds.
      F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
+   S-F5:    Inserts a standard 'main()...' function definition.
 
 **** diff related commands ****
 
