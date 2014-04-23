@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+
+current_dir="`pwd`/"
+
+declare -a words=(`echo "${1}" | tr "+\\-\\~\\.,:;/" "_______ "`)
+
+function check_path()
+{
+    case $actual in
+        TRUNK)
+            start=$index
+        ;;
+        *)
+            if test -d "${1}.svn" -o -d "${1}.git"
+            then
+                start=$index
+            else
+                if test "${1}" = "$current_dir"
+                then
+                    start=$index
+                fi
+            fi
+        ;;
+    esac
+}
+
+start=
+index=0
+actual_path=
+check_path "$actual_path"
+while test "${words[$index]}"
+do
+    actual="${words[$index]}"
+    index=$(($index+1))
+    actual_path="$actual_path$actual/"
+    check_path "$actual_path"
+done
+
+echo -n "_"
+
+if test "$start"
+then
+    while test $start -lt ${#words[*]}
+    do
+        echo -n "_${words[$start]}" | tr "[a-z]" "[A-Z]"
+        start=$(($start+1))
+    done
+fi
+
+echo "_INCLUDED__"
+
