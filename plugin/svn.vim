@@ -486,17 +486,26 @@ map <F9> :call Ver_Log()<CR>
 
 function! Ver_GetGivenRevOfFile()
   let l:saved_reg = @"
+  let l:filetype=&ft
+  if exists("w:kgy_orig_name")
+    let l:filename = w:kgy_orig_name
+  else
+    let l:filename = expand("%")
+  endif
   let l:revision = input("Revision #")
   if !empty(l:revision)
     let l:currpos = line(".")
     if exists("w:kgy_row_offset")
         let l:currpos -= w:kgy_row_offset
     endif
-    let l:orig_file_name = expand("%")
     new
-    let w:kgy_orig_name = l:orig_file_name
+    let w:kgy_orig_name = l:filename
     let w:kgy_svn_revision = l:revision
-    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
+    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:filename . ' -r ' . l:revision
+    let l:statusline = 'File ' . l:filename . ' (rev ' . l:revision . ')'
+    let l:statusline .= ' [S-F9]+'
+    execute ':setl statusline=' . escape(l:statusline, ' \')
+    execute ':set filetype=' . l:filetype
     call cursor(l:currpos, 1)
   endif
   let @"=l:saved_reg
