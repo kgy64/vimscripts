@@ -1,27 +1,6 @@
 #!/bin/bash
 #
 
-declare -a DIRS
-dir_no=0
-
-while test $# -gt 0
-do
-    case "$1" in
-        -c)
-            cached=1
-        ;;
-        -*)
-            echo "Unknown option: $1" >&2
-            exit 1
-        ;;
-        *)
-            DIRS[$dirno]="$1"
-            dirno=$(($dirno+1))
-        ;;
-    esac
-    shift
-done
-
 function do_svn_mode()
 {
  ss "${DIRS[@]}" | grep "^[AM]" | grep -v "\.vcproj\>" | grep -v "\.sln\>" | awk '{ i=2; while (1) { printf("%s ", $i); if (i>=NF) break; i++ }; printf("\n"); }' | {
@@ -59,17 +38,47 @@ function do_git_mode()
 
 # ---------------------------------------------
 
+declare -a DIRS
+dir_no=0
+
+while test $# -gt 0
+do
+    case "$1" in
+        -c)
+            cached=1
+        ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 1
+        ;;
+        *)
+            DIRS[$dirno]="$1"
+            dirno=$(($dirno+1))
+        ;;
+    esac
+    shift
+done
+
 testdir="${DIRS[0]}"
 test "$testdir" || testdir=.
 
-if test -d "$testdir/.svn"
-then
-    do_svn_mode | dos2unix
-elif test -d "$testdir/.git"
-then
-    do_git_mode | dos2unix
-else
-    echo "No version control found." >&2
-    exit 1
-fi
+while true
+do
+    testdir=$(cd $testdir && pwd)
+    if test "$testdir" = "/"
+    then
+        echo "No version control." >&2
+        exit 1
+    fi
+    if test -d "$testdir/.svn"
+    then
+        do_svn_mode | dos2unix
+        exit 0
+    elif test -e "$testdir/.git"
+    then
+        do_git_mode | dos2unix
+        exit 0
+    fi
+    testdir="$testdir/.."
+done
 
