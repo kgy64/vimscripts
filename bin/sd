@@ -31,8 +31,8 @@ function do_git_mode()
  if test "$cached" = "1"; then
     git show "${DIRS[@]}" | git_mod_out
  else
-    git diff "${DIRS[@]}" --relative . | git_mod_out
-    git diff "${DIRS[@]}" --cached --relative . | git_mod_out
+    git diff --relative "${DIRS[@]}" | git_mod_out
+    git diff --cached --relative "${DIRS[@]}" | git_mod_out
  fi
 }
 
