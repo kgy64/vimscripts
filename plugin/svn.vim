@@ -36,8 +36,6 @@ function! GoToMyFile()
     let l:saved_reg = @"
     normal ^
     split
-    "remember current position
-    let currpos = line(".")
     let difference = 0
     "search for original file name
     call search("^ \\*\\*\\* FILE\\>", "bW")
@@ -59,16 +57,20 @@ function! GoToFile()
     let l:saved_reg = @"
     normal ^
     split
-    "remember current position
-    let currpos = line(".")
-    let difference = 0
-    let str = getline(".")
-    while match(str, "@@", 0) == -1
-        if match(str, "-", 0) != 0
-            let difference = difference + 1
+    let l:difference = 0
+    let l:str = getline(".")
+    while match(l:str, "@@", 0) == -1
+        if match(l:str, "-", 0) != 0
+            let l:difference = l:difference + 1
         endif
         normal -
-        let str = getline(".")
+        let l:currpos = line(".")
+        if (l:currpos == 1)
+            " at the top, nothing to do:
+            let @"=l:saved_reg
+            return
+        endif
+        let l:str = getline(".")
     endwhile
     "we are at the right position
     "store the line number in orig. file in @z
@@ -77,9 +79,9 @@ function! GoToFile()
     call search("^+++", "bW")
     "open original file with command 'gf'
     normal wgf
-    let origfilelineno = @z
+    let l:origfilelineno = @z
     "go to the right position :)
-    call cursor(origfilelineno + difference - 1, 1)
+    call cursor(l:origfilelineno + l:difference - 1, 1)
     " Restore the value of the unnamed register
     let @"=l:saved_reg
 endfunction
