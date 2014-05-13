@@ -10,7 +10,7 @@ nnoremap <Leader>sc :call Open_C(1)<CR>
 nnoremap <Leader>sh :call Open_H(1)<CR>
 
 function! OpenAnyFile(p_name, p_ext, p_split, p_forced)
-    let l:new_name = substitute(a:p_name, "\M\\|.cpp$\\|.cc$\\|.c$\\|.h$", a:p_ext, "")
+    let l:new_name = substitute(a:p_name, '\v.cpp$|.cc$|.c$|.h$', a:p_ext, "")
     if l:new_name == @%
         return 1
     endif
