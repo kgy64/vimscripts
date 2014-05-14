@@ -68,6 +68,8 @@ function! GoToFile()
         if (l:currpos == 1)
             " at the top, nothing to do:
             let @"=l:saved_reg
+            execute 'quit'
+            execute 'echo "Wrong position: could not find original filename"'
             return
         endif
         let l:str = getline(".")
@@ -75,10 +77,18 @@ function! GoToFile()
     "we are at the right position
     "store the line number in orig. file in @z
     normal 6w"zye^
-    "search for original file name
+    "search for original file name:
     call search("^+++", "bW")
-    "open original file with command 'gf'
-    normal wgf
+    "go to the original filename:
+    normal w
+    "read the filename:
+    let l:originalfilename = expand("<cfile>")
+    if isdirectory(l:originalfilename)
+        execute 'quit'
+        execute 'echo "This is probably a submodule, see its diff at the bottom!"'
+        return
+    endif
+    execute 'edit!' . l:originalfilename
     let l:origfilelineno = @z
     "go to the right position :)
     call cursor(l:origfilelineno + l:difference - 1, 1)
