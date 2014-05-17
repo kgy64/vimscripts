@@ -1,26 +1,37 @@
 #!/bin/bash
 #
 
+NAME="$1"
+
 current_dir="`pwd`/"
 
-declare -a words=(`echo "${1}" | tr "+\\-\\~\\.,:;/" "_______ "`)
+declare -a words=(`echo "$NAME" | tr "+\\-\\~\\.,:;/" "_______ "`)
 
 function check_path()
 {
+    echo "<${actual_path}><$current_dir>" >&2
     if test -d "${actual_path}.svn" -o -d "${actual_path}.git"
     then
         start=$index
+        echo "A: <$start>" >&2
     else
         if test "${actual_path}" = "$current_dir"
         then
             start=$index
+            echo "B: <$start>" >&2
         fi
     fi
+    echo "<$start>" >&2
 }
+
+if test "${NAME:0:1}" = "/"; then
+    actual_path=/
+else
+    actual_path=
+fi
 
 start=
 index=0
-actual_path=
 check_path
 while test "${words[$index]}"
 do
