@@ -124,7 +124,8 @@ if has("cscope")
     nmap ;<C-C> :scs find c 
     nmap ;<C-T> :scs find t 
     nmap ;<C-E> :scs find e 
-    nmap ;<C-F> :scs find f 
+" ;<C-F> moved to kgy.vim
+" nmap ;<C-F> :scs find f 
     nmap ;<C-I> :scs find i 
     nmap ;<C-V> :scs find d 
 

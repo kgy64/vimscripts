@@ -11,6 +11,14 @@ endfunction
 
 " --------------------------------------------------
 
+function! EnterFile2Search()
+  let l:saved_reg = @"
+  let l:fname = input("Enter filename to search: ")
+  let l:fname = substitute(l:fname, "+", "[+]", "g")
+  execute ":scs find f " . l:fname
+  let @"=l:saved_reg
+endfunction
+
 function! GoToFileAndLine()
   let l:saved_reg = @"
   let l:filename = expand("<cfile>")
@@ -148,6 +156,7 @@ nmap    ;n      :call NewlineHtml()<CR>a
 nmap    ;l      :call AddList()<CR>
 nmap    ;L      :call AddListEntry()<CR>o<TAB>
 nmap    ;f      :call GoToFileAndLine()<CR>
+nmap    ;<C-F>  :call EnterFile2Search()<CR>
 
 nnoremap ;I     :call IncludeMe()<CR>
 nnoremap ;d     :stjump <C-R>=expand("<cword>")<CR><CR>
