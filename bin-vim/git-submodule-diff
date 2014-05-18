@@ -14,7 +14,7 @@ function do_diff()
 
 function do_output()
 {
- sed -e "s'^--- a/'--- $NAME/'" -e "s'+++ b/'+++ $NAME/'" | while read line
+ sed -e "s'^--- a/'--- $NAME/'" -e "s'+++ b/'+++ $NAME/'" -e "s%\\\\$%\\\\\\\\ %" | while read line
  do
     if test -z "$MESSAGE"
     then
