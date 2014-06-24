@@ -1,15 +1,9 @@
 #!/bin/bash
 #
 
-NAME="$1"
-
-current_dir="`pwd`/"
-
-declare -a words=(`echo "$NAME" | tr "+\\-\\~\\.,:;/" "_______ "`)
-
 function check_path()
 {
-    if test -d "${actual_path}.svn" -o -d "${actual_path}.git"
+    if test -e "${actual_path}.svn" -o -e "${actual_path}.git"
     then
         start=$index
     else
@@ -19,6 +13,14 @@ function check_path()
         fi
     fi
 }
+
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+NAME="$1"
+
+current_dir="`pwd`/"
+
+declare -a words=(`echo "$NAME" | tr "+\\-\\~\\.,:;/" "_______ "`)
 
 if test "${NAME:0:1}" = "/"; then
     actual_path=/
