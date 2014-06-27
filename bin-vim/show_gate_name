@@ -5,11 +5,11 @@ function check_path()
 {
     if test -e "${actual_path}.svn" -o -e "${actual_path}.git"
     then
-        start=$index
+        start_root=$index
     else
         if test "$actual_path" = "$current_dir"
         then
-            start=$index
+            start_current=$index
         fi
     fi
 }
@@ -33,7 +33,8 @@ declare -a words=(`echo "$PATHNAME" | tr "/" " "`)
 
 actual_path=/
 
-start=
+start_root=
+start_current=
 index=0
 check_path
 while test "${words[$index]}"
@@ -43,14 +44,16 @@ do
     index=$(($index+1))
 done
 
+test "$start_root" || start_root="$start_current"
+
 echo -n "_"
 
-if test "$start"
+if test "$start_root"
 then
-    while test $start -lt ${#words[*]}
+    while test $start_root -lt ${#words[*]}
     do
-        echo -n "_${words[$start]}" | tr "[a-z]+\\-\\~\\.,:;" "[A-Z]_______"
-        start=$(($start+1))
+        echo -n "_${words[$start_root]}" | tr "[a-z]+\\-\\~\\.,:;" "[A-Z]_______"
+        start_root=$(($start_root+1))
     done
 fi
 
