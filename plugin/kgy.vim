@@ -11,6 +11,14 @@ endfunction
 
 " --------------------------------------------------
 
+function! EnterFile2Search()
+  let l:saved_reg = @"
+  let l:fname = input("Enter filename to search: ")
+  let l:fname = substitute(l:fname, "+", "[+]", "g")
+  execute ":scs find f " . l:fname
+  let @"=l:saved_reg
+endfunction
+
 function! GoToFileAndLine()
   let l:saved_reg = @"
   let l:filename = expand("<cfile>")
@@ -34,6 +42,16 @@ function! Print_MyHelp()
   new
   execute ":silent! $read ! ~/bin/vim/print_help"
   execute ":2"
+endfunction
+
+function! InsertMain()
+  let l:saved_reg = @"
+  execute "normal! oint main(int argc, char ** argv)"
+  execute "normal! o{"
+  execute "normal! o}"
+  execute "normal! ko"
+  let @"=l:saved_reg
+  return "\t"
 endfunction
 
 function! GetGateName()
@@ -138,6 +156,7 @@ nmap    ;n      :call NewlineHtml()<CR>a
 nmap    ;l      :call AddList()<CR>
 nmap    ;L      :call AddListEntry()<CR>o<TAB>
 nmap    ;f      :call GoToFileAndLine()<CR>
+nmap    ;<C-F>  :call EnterFile2Search()<CR>
 
 nnoremap ;I     :call IncludeMe()<CR>
 nnoremap ;d     :stjump <C-R>=expand("<cword>")<CR><CR>
@@ -146,6 +165,7 @@ nnoremap ;<C-D> :stjump
 inoremap <S-F2> <C-R>=GetGateName()<CR>
 inoremap <F4>   <C-R>=strftime("%F %R")<CR>
 inoremap <S-F4> <C-R>=strftime("%F %R:%S")<CR>
+inoremap <S-F5> <C-R>=InsertMain()<CR>
 
 map     <S-F1>  i// KGY: szívás ellen: <ESC>
 map     <F2>    :call Print_MyHelp()<CR>

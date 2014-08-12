@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-for dir in . $HOME/bin
+for dir in . $HOME/bin $HOME/bin/vim
 do
     test -x $dir/show_gate_name && {
         $dir/show_gate_name "$@"
@@ -9,5 +9,5 @@ do
     }
 done
 
-echo __"$1"_INCLUDED__ | tr "[a-z]+\\-\\~\\.,:;/" "[A-Z]________"
+echo __"$2"_INCLUDED__ | tr "[a-z]+\\-\\~\\.,:;/" "[A-Z]________"
 

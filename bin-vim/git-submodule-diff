@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+
+NAME="$1"
+TARGET="$2"
+
+cd "$TARGET" || exit 1
+
+function do_diff()
+{
+ git diff
+ git diff --cached
+}
+
+function do_output()
+{
+ sed -e "s'^--- a/'--- $NAME/'" -e "s'+++ b/'+++ $NAME/'" -e "s%\\\\$%\\\\\\\\ %" | while read line
+ do
+    if test -z "$MESSAGE"
+    then
+        echo "   ******** submodule $NAME: **********"
+        MESSAGE=yes
+    fi
+    echo "$line"
+ done
+}
+
+do_diff | do_output
+

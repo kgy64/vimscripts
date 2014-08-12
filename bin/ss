@@ -3,25 +3,38 @@
 
 filter="grep -v ^?"
 
+declare -a DIRS
+dir_no=0
+
 while test $# -ge 1
 do
-	case "$1" in
-		-?)
-			filter=cat
-		;;
-		*)
-			echo "Unknown option: '$1'"
-			exit 1
-		;;
-	esac
-	shift
+    case "$1" in
+        -?)
+            filter=cat
+        ;;
+        -*)
+            echo "Unknown option: '$1'"
+            exit 1
+        ;;
+        *)
+            DIRS[$dirno]="$1"
+            dirno=$(($dirno+1))
+        ;;
+    esac
+    shift
 done
 
-if test -d "./.svn"
+testdir="${DIRS[0]}"
+test "$testdir" || testdir=.
+
+if test -d "$testdir/.svn"
 then
-	svn status | tr "\\\\" "/" | $filter
-elif test -d "./.git"
+    svn status "${DIRS[@]}" | tr "\\\\" "/" | $filter
+elif test -d "$testdir/.git"
 then
-	git status | tr "\\\\" "/" | grep "\<modified:" | awk '{ print $3 }'
+    git status "${DIRS[@]}" | tr "\\\\" "/" | grep "\<modified:" | awk '{ print $3 }'
+else
+    echo "No version control found." >&2
+    exit 1
 fi
 

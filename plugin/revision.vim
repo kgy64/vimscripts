@@ -36,8 +36,6 @@ function! GoToMyFile()
     let l:saved_reg = @"
     normal ^
     split
-    "remember current position
-    let currpos = line(".")
     let difference = 0
     "search for original file name
     call search("^ \\*\\*\\* FILE\\>", "bW")
@@ -59,27 +57,41 @@ function! GoToFile()
     let l:saved_reg = @"
     normal ^
     split
-    "remember current position
-    let currpos = line(".")
-    let difference = 0
-    let str = getline(".")
-    while match(str, "@@", 0) == -1
-        if match(str, "-", 0) != 0
-            let difference = difference + 1
+    let l:difference = 0
+    let l:str = getline(".")
+    while match(l:str, "@@", 0) == -1
+        if match(l:str, "-", 0) != 0
+            let l:difference = l:difference + 1
         endif
         normal -
-        let str = getline(".")
+        let l:currpos = line(".")
+        if (l:currpos == 1)
+            " at the top, nothing to do:
+            let @"=l:saved_reg
+            execute 'quit'
+            execute 'echo "Wrong position: could not find original filename"'
+            return
+        endif
+        let l:str = getline(".")
     endwhile
     "we are at the right position
     "store the line number in orig. file in @z
     normal 6w"zye^
-    "search for original file name
+    "search for original file name:
     call search("^+++", "bW")
-    "open original file with command 'gf'
-    normal wgf
-    let origfilelineno = @z
+    "go to the original filename:
+    normal w
+    "read the filename:
+    let l:originalfilename = expand("<cfile>")
+    if isdirectory(l:originalfilename)
+        execute 'quit'
+        execute 'echo "This is probably a submodule, see its diff at the bottom!"'
+        return
+    endif
+    execute 'edit!' . l:originalfilename
+    let l:origfilelineno = @z
     "go to the right position :)
-    call cursor(origfilelineno + difference - 1, 1)
+    call cursor(l:origfilelineno + l:difference - 1, 1)
     " Restore the value of the unnamed register
     let @"=l:saved_reg
 endfunction
@@ -486,17 +498,26 @@ map <F9> :call Ver_Log()<CR>
 
 function! Ver_GetGivenRevOfFile()
   let l:saved_reg = @"
+  let l:filetype=&ft
+  if exists("w:kgy_orig_name")
+    let l:filename = w:kgy_orig_name
+  else
+    let l:filename = expand("%")
+  endif
   let l:revision = input("Revision #")
   if !empty(l:revision)
     let l:currpos = line(".")
     if exists("w:kgy_row_offset")
         let l:currpos -= w:kgy_row_offset
     endif
-    let l:orig_file_name = expand("%")
     new
-    let w:kgy_orig_name = l:orig_file_name
+    let w:kgy_orig_name = l:filename
     let w:kgy_svn_revision = l:revision
-    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:orig_file_name . ' -r ' . l:revision
+    execute ':silent! $read ! $HOME/bin/vim/do-revision-cmd cat ' . l:filename . ' -r ' . l:revision
+    let l:statusline = 'File ' . l:filename . ' (rev ' . l:revision . ')'
+    let l:statusline .= ' [S-F9]+'
+    execute ':setl statusline=' . escape(l:statusline, ' \')
+    execute ':set filetype=' . l:filetype
     call cursor(l:currpos, 1)
   endif
   let @"=l:saved_reg
