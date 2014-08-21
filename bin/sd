@@ -31,8 +31,8 @@ function do_git_mode()
     local dir="$(pwd)"
     for name in $(git submodule foreach pwd | grep -v "^Entering" | sed -e "s%^$dir/%%")
     do
-        (cd $name && git diff --relative --src-prefix "$name" --dst-prefix "$name" "${DIRS[@]}" && \
-                     git diff --cached --relative --src-prefix "$name" --dst-prefix "$name" "${DIRS[@]}")
+        (cd $name && git diff --relative --src-prefix "$name/" --dst-prefix "$name/" "${DIRS[@]}" && \
+                     git diff --cached --relative --src-prefix "$name/" --dst-prefix "$name/" "${DIRS[@]}")
     done
  fi
 }
