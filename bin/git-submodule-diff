@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+
+name="$1"
+shift
+
+prefix="$(pwd | sed "s%$name%.%")"
+
+git diff --relative --src-prefix "$prefix/" --dst-prefix "$prefix/" "$@"
+git diff --cached --relative --src-prefix "$prefix/" --dst-prefix "$prefix/" "$@"
+

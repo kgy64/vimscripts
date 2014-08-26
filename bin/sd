@@ -28,12 +28,7 @@ function do_git_mode()
  else
     git diff --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
     git diff --cached --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
-    local dir="$(pwd)"
-    for name in $(git submodule foreach pwd | grep -v "^Entering" | sed -e "s%^$dir/%%")
-    do
-        (cd $name && git diff --relative --src-prefix "$name/" --dst-prefix "$name/" "${DIRS[@]}" && \
-                     git diff --cached --relative --src-prefix "$name/" --dst-prefix "$name/" "${DIRS[@]}")
-    done
+    git submodule foreach $HOME/bin/git-submodule-diff "$(pwd)" "${DIRS[@]}"
  fi
 }
 
