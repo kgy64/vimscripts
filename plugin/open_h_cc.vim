@@ -47,6 +47,9 @@ function! Open_H(p_split)
     else
         let l:filename = expand("%")
     endif
+    if OpenAnyFile(l:filename, ".hpp", a:p_split, 0)
+        return
+    endif
     call OpenAnyFile(l:filename, ".h", a:p_split, 1)
 endfunction
 
