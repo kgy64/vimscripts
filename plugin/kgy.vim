@@ -150,7 +150,7 @@ function AddList()
 endfunction
 
 nmap    ;b      :call BoldHtml()<CR>i
-nmap    ;c      :call BoldHtml2()<CR>i
+nmap    ;B      :call BoldHtml2()<CR>i
 nmap    ;r      :call RefHtml()<CR>i
 nmap    ;n      :call NewlineHtml()<CR>a
 nmap    ;l      :call AddList()<CR>
