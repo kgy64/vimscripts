@@ -2,7 +2,7 @@
 syntax on
 colorscheme kgy
 set background=dark
-set textwidth=120
+set textwidth=0 wrapmargin=0
 
 " Egzotikus >-ok
 set list listchars=tab:>\ ,trail:$

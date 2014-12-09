@@ -26,8 +26,8 @@ function do_git_mode()
  if test "$cached" = "1"; then
     git show "${DIRS[@]}"
  else
-    git diff --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
-    git diff --cached --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
+    git diff $revision --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
+    git diff $revision --cached --relative --src-prefix ./ --dst-prefix ./ "${DIRS[@]}"
     git submodule foreach $HOME/bin/git-submodule-diff "$(pwd)" "${DIRS[@]}"
  fi
 }
@@ -42,6 +42,10 @@ do
     case "$1" in
         -c)
             cached=1
+        ;;
+        -r)
+            shift
+            revision="$1"
         ;;
         -*)
             echo "Unknown option: $1" >&2
