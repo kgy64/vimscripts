@@ -121,12 +121,14 @@ fi
 
 sed -i -e "s/^\.\///" cscope.files
 
-$CTAGS $CTAGS_PARAMS -L cscope.files
+test "$CTAGS" && $CTAGS $CTAGS_PARAMS -L cscope.files
 
 sed -i -e "s/ /\\\\ /g" cscope.files
-$CSCOPE -b -q -i cscope.files
+test "$CSCOPE" && $CSCOPE -b -q -i cscope.files
 
 # Delete temporaries: --------------
 
-# rm -f cscope.files cscope.dirs $TMPFILE
+rm -f cscope.files cscope.dirs $TMPFILE
+
+exit 0
 
