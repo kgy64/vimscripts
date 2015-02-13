@@ -91,8 +91,6 @@ function! s:create_new_header()
   let @"=l:saved_reg
 endfunction
 
-autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
-
 function! s:create_new_cpp()
   let l:saved_reg = @"
   let headername = substitute(expand("%:t"), "\\.cpp", "", "g") . ".h"
@@ -148,6 +146,10 @@ function AddList()
   execute "normal! o<ul>"
   execute "normal! o</ul>"
 endfunction
+
+"-------------------------------------------------------------
+
+autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
 
 nmap    ;b      :call BoldHtml()<CR>i
 nmap    ;B      :call BoldHtml2()<CR>i

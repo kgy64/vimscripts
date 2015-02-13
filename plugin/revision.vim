@@ -88,6 +88,7 @@ function! GoToFile()
         execute 'echo "This is probably a submodule, see its diff at the bottom!"'
         return
     endif
+    execute ':silent ! ~/bin/vim/create-git-path'
     execute 'edit!' . l:originalfilename
     let l:origfilelineno = @z
     "go to the right position :)

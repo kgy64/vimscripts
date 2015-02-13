@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+
+test -e "./b" && exit
+
+P="$(pwd)"
+
+while test "$P" != "/"
+do
+    if test -e "$P/.git"
+    then
+        ln -s "$P" b
+        exit
+    fi
+    P="$(dirname "$P")"
+done
+
