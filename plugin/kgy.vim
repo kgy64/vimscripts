@@ -31,7 +31,11 @@ function! GoToFileAndLine()
     let l:file_pos = expand("<cword>")
   endif
   call cursor(l:currpos, l:column)
-  execute ":scs find f " . l:filename
+  if l:filename[0] == '/'
+    execute ":split " . l:filename
+  else
+    execute ":scs find f " . l:filename
+  endif
   if exists('l:file_pos') && l:file_pos > 0
     call cursor(l:file_pos, 1)
   endif
@@ -71,7 +75,8 @@ function! Call4Bugtracker()
 endfunction
 
 function! s:create_generic_header()
-  execute ':silent! $read ! ~/bin/vim/generic-header'
+  let l:filename = expand("%")
+  execute ':silent! $read ! ~/bin/vim/generic-header ' . l:filename
   execute ":silent 1"
   normal dd
   execute ":silent $"
