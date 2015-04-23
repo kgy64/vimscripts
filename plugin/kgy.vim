@@ -74,6 +74,11 @@ function! Call4Bugtracker()
   endif
 endfunction
 
+function! RedmineHyperlink()
+  let l:tracker_id = expand("<cword>")
+  normal bihttp://redmine.eutecus.com/issues/
+endfunction
+
 function! s:create_generic_header()
   let l:filename = expand("%")
   execute ':silent! $read ! ~/bin/vim/generic-header ' . l:filename
@@ -178,5 +183,6 @@ map     <S-F1>  i// KGY: szívás ellen: <ESC>
 map     <F2>    :call Print_MyHelp()<CR>
 map     <F3>    :! ~/bin/vim/update_tags<CR>:cs reset<CR>
 map     <S-F3>  :w! /tmp/vim-difi<CR>:silent ! kompare /tmp/vim-difi &<CR>
+map     <C-F3>  :call RedmineHyperlink()<CR>
 map     <F5>    :call Call4Bugtracker()<CR>
 

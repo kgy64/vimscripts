@@ -7,6 +7,7 @@ cat <<EOF
      F2:    Print this help.
    S-F2:    Insert a guard for C/C++ header
      F3:    Update cscope/ctags database.
+   C-F3:    Changes the number under the cursor to a Redmine Task hyperlink.
      F4:    Print the current date and time.
    S-F4:    Same as F4, plus the seconds.
      F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
@@ -77,6 +78,8 @@ Second char with <CTRL>: enter commandline
   ;L    Add an entry for above list (<li>...</li>)
 
 **** Pyclewn ****
+
+Note that starting Pyclewn re-assingns some keys.
 
      F6:    Start a Pyclewn session (see http://pyclewn.sourceforge.net for installation)
             Note that such a session has its own key mapping as follows:
