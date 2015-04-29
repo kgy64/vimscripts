@@ -468,6 +468,7 @@ function! Ver_Cat()
 endfunction
 
 map <A-F10> :call Ver_Cat()<CR>
+map <S-C-F10> :call Ver_Cat()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

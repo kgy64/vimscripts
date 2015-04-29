@@ -4,12 +4,13 @@
 function check_info()
 {
     local path="${1}"
+    echo "$path" >>/tmp/x
     local parent="$(dirname "$path")"
-    test "$parent" != "$HOME" && test "$parent" != "/" && check_info "$parent"
+    test "$parent" != "$HOME" && test "$parent" != "/" && test "$path" != "." && check_info "$parent"
     test -e "$path/project-info" && . "$path/project-info"
 }
 
-check_info "$(pwd)"
+check_info "$(dirname "$1")"
 
 test "$COPYING" || COPYING="COPYING"
 test "$LICENCE" && LICENSE="$LICENCE"
