@@ -18,7 +18,7 @@ highlight SpecialKey ctermfg=4                         guifg=#005080
 highlight Statement  ctermfg=3             cterm=bold  guifg=#c0c000                 gui=bold
 highlight PreProc    ctermfg=2                         guifg=#00ff00
 highlight Type       ctermfg=2                         guifg=#00c000
-highlight Special    ctermfg=5  ctermbg=8              guifg=#304070
+highlight Special    ctermfg=5  ctermbg=8              guifg=#409090
 highlight Error                 ctermbg=1                             guibg=#ff0000
 highlight Todo       ctermfg=4  ctermbg=3              guifg=#000080  guibg=#c0c000
 highlight Directory  ctermfg=2                         guifg=#00c000
