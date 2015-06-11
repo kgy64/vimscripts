@@ -85,11 +85,14 @@ function scan_source_dirs()
                 j=$(($j+1))
             fi
         fi
-        find "$dir/" -type f -a "${find_params[@]}"
+        echo -n "Scanning $dir: "
+        find "$dir/" -type f -a "${find_params[@]}" >>cscope.files
+        echo "$(wc -l cscope.files | cut -d " " -f 1) files."
     done
 }
 
-scan_source_dirs <cscope.dirs >cscope.files
+>cscope.files
+scan_source_dirs <cscope.dirs
 
 for pattern in $FILE_PATTERN
 do
@@ -117,14 +120,26 @@ then
     )
 fi
 
+echo "Found $(wc -l cscope.files | cut -d " " -f 1) files."
+
 # Do the job: ----------------------
 
 sed -i -e "s/^\.\///" cscope.files
 
-test "$CTAGS" && $CTAGS $CTAGS_PARAMS -L cscope.files
+if test "$CTAGS"
+then
+    echo -n "Running ctags ..."
+    $CTAGS $CTAGS_PARAMS -L cscope.files
+    echo
+fi
 
 sed -i -e "s/ /\\\\ /g" cscope.files
-test "$CSCOPE" && $CSCOPE -b -q -i cscope.files
+if test "$CSCOPE"
+then
+    echo -n "Running cscope ..."
+    $CSCOPE -b -q -i cscope.files
+    echo
+fi
 
 # Delete temporaries: --------------
 
