@@ -86,8 +86,10 @@ function scan_source_dirs()
             fi
         fi
         echo -n "Scanning $dir: "
-        find "$dir/" -type f -a "${find_params[@]}" >>cscope.files
-        echo "$(wc -l cscope.files | cut -d " " -f 1) files."
+        find "$dir/" -type f -a "${find_params[@]}" >>$TMPFILE
+        echo "$(wc -l $TMPFILE | cut -d " " -f 1) files."
+        cat $TMPFILE >>cscope.files
+        rm $TMPFILE
     done
 }
 
