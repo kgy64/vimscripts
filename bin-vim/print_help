@@ -77,30 +77,4 @@ Second char with <CTRL>: enter commandline
   ;l    Add an unnumbered list (<ul>...</ul>)
   ;L    Add an entry for above list (<li>...</li>)
 
-**** Pyclewn ****
-
-Note that starting Pyclewn re-assingns some keys.
-
-     F6:    Start a Pyclewn session (see http://pyclewn.sourceforge.net for installation)
-            Note that such a session has its own key mapping as follows:
-     F6:    Build the project (start 'make', enter its parameters manually)
-     F7:    Displays backtrace for all threads (if the program has been stopped: see F3 to stop)
-   S-F7:    Use it in the backtrace window: jumps to the function under cursor
-   A-F7:    Displays backtrace of the current thread
-     F5:    Starts the application (enter the executable path manually). Stops at main() by default
-   S-F5:    (Re)starts the already loaded executable
-     F3:    Break the running application
-     F4:    Continue
-   S-F4:    Print an expression (enter the expression manually)
-     F8:    Displays a variable in the watch window (enter tha varianle name manually)
-   S-F8:    Use it in the watch window: expand/collapse a structure or class
-   A-F8:    Use it in the watch window: remove a variable
-     F9:    Set breakpoint at the cursor
-   S-F9:    Clear breakpoint at the cursor
-    F10:    Step Over
-    F11:    Step Into
-   S-F2:    Set up the output terminal (enter terminal name)
-   C-UP:    Up one level in the call stack
- C-DOWN:    Down one level in the call stack
-
 EOF
