@@ -74,11 +74,6 @@ function! Call4Bugtracker()
   endif
 endfunction
 
-function! RedmineHyperlink()
-  let l:tracker_id = expand("<cword>")
-  normal bihttp://redmine.eutecus.com/issues/
-endfunction
-
 function! s:create_generic_header()
   let l:filename = expand("%")
   execute ':silent! $read ! ~/bin/vim/generic-header ' . l:filename
@@ -160,29 +155,4 @@ endfunction
 "-------------------------------------------------------------
 
 autocmd BufNewFile *.{h,hpp} call <SID>create_new_header()
-
-nmap    ;b      :call BoldHtml()<CR>i
-nmap    ;B      :call BoldHtml2()<CR>i
-nmap    ;r      :call RefHtml()<CR>i
-nmap    ;n      :call NewlineHtml()<CR>a
-nmap    ;l      :call AddList()<CR>
-nmap    ;L      :call AddListEntry()<CR>o<TAB>
-nmap    ;f      :call GoToFileAndLine()<CR>
-nmap    ;<C-F>  :call EnterFile2Search()<CR>
-
-nnoremap ;I     :call IncludeMe()<CR>
-nnoremap ;d     :stjump <C-R>=expand("<cword>")<CR><CR>
-nnoremap ;<C-D> :stjump 
-
-inoremap <S-F2> <C-R>=GetGateName()<CR>
-inoremap <F4>   <C-R>=strftime("%F %R")<CR>
-inoremap <S-F4> <C-R>=strftime("%F %R:%S")<CR>
-inoremap <S-F5> <C-R>=InsertMain()<CR>
-
-map     <S-F1>  i// KGY: szívás ellen: <ESC>
-map     <F2>    :call Print_MyHelp()<CR>
-map     <F3>    :! ~/bin/vim/update_tags<CR>:cs reset<CR>
-map     <S-F3>  :w! /tmp/vim-difi<CR>:silent ! kompare /tmp/vim-difi &<CR>
-map     <C-F3>  :call RedmineHyperlink()<CR>
-map     <F5>    :call Call4Bugtracker()<CR>
 

@@ -163,8 +163,6 @@ function! Ver_Blame()
   let @"=l:saved_reg
 endfunction
 
-map <F12> :call Ver_Blame()<CR>
-
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function! Ver_Log_Generic(name, revision)
@@ -191,8 +189,6 @@ function! Ver_Log_Rev()
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
-
-map <S-F12> :call Ver_Log_Rev()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -236,8 +232,6 @@ function! Ver_Blame_Mergeinfo()
   let w:kgy_filetype = "blame"
   let @"=l:saved_reg
 endfunction
-
-map <A-F12> :call Ver_Blame_Mergeinfo()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -303,8 +297,6 @@ function! Ver_LocalDiff()
   let @"=l:saved_reg
 endfunction
 
-map <A-F11> :call Ver_LocalDiff()<CR>
-
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function! Ver_Diff_Current()
@@ -331,8 +323,6 @@ function! Ver_Diff_Current()
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
-
-map <S-F11> :call Ver_Diff_Current()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -363,8 +353,6 @@ function! Ver_Diff_Full()
   normal ggdd
   let @"=l:saved_reg
 endfunction
-
-map <F11> :call Ver_Diff_Full()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -400,8 +388,6 @@ function! Ver_GetRevOfFile()
   endif
   let @"=l:saved_reg
 endfunction
-
-map <F10> :call Ver_GetRevOfFile()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -439,8 +425,6 @@ function! Ver_GetPrevRevOfFile()
   let @"=l:saved_reg
 endfunction
 
-map <S-F10> :call Ver_GetPrevRevOfFile()<CR>
-
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function! Ver_Cat()
@@ -467,9 +451,6 @@ function! Ver_Cat()
   let @"=l:saved_reg
 endfunction
 
-map <A-F10> :call Ver_Cat()<CR>
-map <S-C-F10> :call Ver_Cat()<CR>
-
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function Ver_Read_Log_File(name)
@@ -493,8 +474,6 @@ function! Ver_Log()
   normal ggdd
   let @"=l:saved_reg
 endfunction
-
-map <F9> :call Ver_Log()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -524,8 +503,6 @@ function! Ver_GetGivenRevOfFile()
   endif
   let @"=l:saved_reg
 endfunction
-
-map <S-F9> :call Ver_GetGivenRevOfFile()<CR>
 
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -562,8 +539,6 @@ function! Ver_Revert()
   let @"=l:saved_reg
 endfunction
 
-map <F8> :call Ver_Revert()<CR>
-
 " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function! Ver_UpdateTo()
@@ -576,7 +551,5 @@ function! Ver_UpdateTo()
   execute ':!$HOME/bin/vim/do-revision-cmd update "." -r ' . w:kgy_svn_revision
   let @"=l:saved_reg
 endfunction
-
-map <S-F8> :call Ver_UpdateTo()<CR>
 
 " * * * * * * * * * * * * * * * * End - of - File * * * * * * * * * * * * * * * *

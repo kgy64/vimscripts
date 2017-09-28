@@ -10,7 +10,13 @@ all: build_vimproc
 	@echo "---------------------------------------------------------------------------"
 	@echo
 
-install: all copy_files
+install: build_vimproc copy_files
+	@echo
+	@echo "---------------------------------------------------------------------------"
+	@echo "Install finished."
+	@echo "To remove thr vim scripts enter 'make clean' here."
+	@echo "---------------------------------------------------------------------------"
+	@echo
 
 -include dot-vim/Makefile
 

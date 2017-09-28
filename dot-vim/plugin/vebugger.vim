@@ -1,5 +1,3 @@
-
-
 command! -nargs=0 VBGrepeat call vebugger#repeatLastUserAction()
 
 command! -nargs=1 VBGrawWrite call vebugger#userAction('writeLine', <q-args>)
@@ -24,6 +22,7 @@ command! -range -nargs=0 VBGexecuteSelectedText call vebugger#userAction('std_ex
 command! -range -nargs=0 VBGrawWriteSelectedText call vebugger#userAction('writeLine', vebugger#util#get_visual_selection())
 
 command! -nargs=+ -complete=file VBGstartGDB call vebugger#gdb#start([<f-args>][0],{'args':[<f-args>][1:]})
+
 function! s:attachGDB(...)
 	if 1 == a:0
 		let l:processId=vebugger#util#selectProcessOfFile(a:1)
