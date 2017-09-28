@@ -21,13 +21,16 @@ clean: dot-vim/Makefile
 copy_files: dot-vim/Makefile
 	$(MAKE) -C dot-vim copy
 
-SOURCE_FILES = $(shell find dot-vim bin modules/vimproc/autoload modules/vimproc/doc modules/vimproc/lib modules/vimproc/plugin -type f -a ! -name Makefile -a ! -name ".*")
+SOURCE_FILES = $(shell find dot-vim bin modules/vimproc/autoload modules/vimproc/doc modules/vimproc/lib modules/vimproc/plugin -type f -a ! -name Makefile -a ! -name ".*" 2>/dev/null)
 
 dot-vim/Makefile: $(SOURCE_FILES)
 	@./scripts/create-make $(SOURCE_FILES) >$@
 
-build_vimproc:
+build_vimproc: update
 	$(MAKE) -C modules/vimproc
 
-.PHONY: all install copy_files build_vimproc
+update:
+	git submodule update --init
+
+.PHONY: all install update copy_files build_vimproc
 
