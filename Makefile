@@ -15,7 +15,7 @@ install: all copy_files
 -include dot-vim/Makefile
 
 clean: dot-vim/Makefile
-	$(MAKE) -C dot-vim clean
+	$(MAKE) -C dot-vim cleanall
 	rm -f $<
 
 copy_files: dot-vim/Makefile

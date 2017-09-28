@@ -3,7 +3,7 @@
 
 filter()
 {
-    sed -e "s#\<dot-vim\>#\$(HOME)/.vim#g" -e "s#\<modules/vimproc\>#\$(HOME)/.vim#g" -e "s#\<bin/#\$(HOME)/bin/#g"
+    sed -e "s#\<dot-vim\>#$HOME/.vim#g" -e "s#\<modules/vimproc\>#$HOME/.vim#g" -e "s#\<bin/#$HOME/bin/#g"
 }
 
 echo ".PHONY: copy clean"
@@ -13,9 +13,10 @@ do
     destination=$(echo "$file" | filter)
     echo "copy: $destination"
     echo -e "$destination: $(pwd)/$file"
+    echo -e "\t@mkdir -p \"\$(shell dirname \"\$@\")\""
     echo -e "\tcp \"\$<\" \"\$@\""
 done
 
-echo -e "clean:"
+echo -e "cleanall:"
 echo -e "\trm -f $(echo "$*" | filter)"
 
