@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+
+filter()
+{
+    sed -e "s#\<dot-vim\>#\$(HOME)/.vim#g" -e "s#\<modules/vimproc\>#\$(HOME)/.vim#g" -e "s#\<bin/#\$(HOME)/bin/#g"
+}
+
+echo ".PHONY: copy clean"
+
+for file in "$@"
+do
+    destination=$(echo "$file" | filter)
+    echo "copy: $destination"
+    echo -e "$destination: $(pwd)/$file"
+    echo -e "\tcp \"\$<\" \"\$@\""
+done
+
+echo -e "clean:"
+echo -e "\trm -f $(echo "$*" | filter)"
+

@@ -1,0 +1,3 @@
+[submodule "modules/vimproc"]
+	path = modules/vimproc
+	url = git://github.com/Shougo/vimproc.vim.git
