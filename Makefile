@@ -27,7 +27,7 @@ clean: dot-vim/Makefile
 copy_files: dot-vim/Makefile
 	$(MAKE) -C dot-vim copy
 
-SOURCE_FILES = $(shell find dot-vim bin modules/vimproc/autoload modules/vimproc/doc modules/vimproc/lib modules/vimproc/plugin -type f -a ! -name Makefile -a ! -name ".*" 2>/dev/null)
+SOURCE_FILES = vimrc gvimrc $(shell find dot-vim bin modules/vimproc/autoload modules/vimproc/doc modules/vimproc/lib modules/vimproc/plugin -type f -a ! -name Makefile -a ! -name ".*" 2>/dev/null)
 
 dot-vim/Makefile: $(SOURCE_FILES)
 	@./scripts/create-make $(SOURCE_FILES) >$@

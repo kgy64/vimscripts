@@ -156,7 +156,7 @@ function! Ver_Blame()
   normal ggdd
   call cursor(l:currpos, 1)
   let l:statusline = 'Blame of ' . l:name . l:display_rev
-  let l:statusline .= ' [F12]+'
+  let l:statusline .= ' [;vb]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   execute ':set filetype=' . l:filetype
   let w:kgy_filetype = "blame"
@@ -185,7 +185,7 @@ function! Ver_Log_Rev()
   call Ver_Log_Generic(l:name, l:revision)
   normal ggdd
   let l:statusline = 'Log of revision ' . l:revision
-  let l:statusline .= ' [S-F12]+'
+  let l:statusline .= ' [;vr]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   let @"=l:saved_reg
 endfunction
@@ -419,7 +419,7 @@ function! Ver_GetPrevRevOfFile()
   let w:kgy_svn_revision = l:prev_revision
   call cursor(l:currpos, 1)
   let l:statusline = 'File ' . l:filename . ' (rev ' . l:prev_revision . ')'
-  let l:statusline .= ' [S-F10]+'
+  let l:statusline .= ' [;vp]+'
   execute ':setl statusline=' . escape(l:statusline, ' \')
   execute ':set filetype=' . l:filetype
   let @"=l:saved_reg

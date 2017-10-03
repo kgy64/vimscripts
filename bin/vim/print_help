@@ -4,78 +4,94 @@
 cat <<EOF
 **** generic commands ****
 
-     F2:    Print this help.
-   S-F2:    Insert a guard for C/C++ header
-     F3:    Update cscope/ctags database.
-   C-F3:    Changes the number under the cursor to a Redmine Task hyperlink.
-     F4:    Print the current date and time.
-   S-F4:    Same as F4, plus the seconds.
-     F5:    Opens a browser with bug# (# or b#) or review# (r#) under the cursor
-     ;m:    Inserts a standard 'main()...' function definition.
+      F2     Print this help.
+    S-F2     Insert a guard for C/C++ header
+      F3     Update cscope/ctags database.
+    C-F3     Changes the number under the cursor to a Redmine Task hyperlink.
+      F4     Print the current date and time.
+    S-F4     Same as F4, plus the seconds.
+      ;b     Opens a browser with bug# (# or b#) or review# (r#) under the cursor
+      ;m     Inserts a standard 'main()...' function definition.
 
 **** diff related commands ****
 
-   S-F3:    Open 'kompare' with the current file. Useful for diff files only.
-     \g:    Go to the original source
-     \r:    Refresh the current diff
+    S-F3     Open 'kompare' with the current file. Useful for diff files only.
+      \g     Go to the original source
+      \r     Refresh the current diff
 
 **** revision related commands ****
 
-     F8:    Revert of the current file (can be used in diff file too)
-   S-F8:    Update everything to the revision under the cursor
-     F9:    Read the version control log of the current file
-   S-F9:    Read the given revision of the current file
-    F10:    Read the revision under cursor (in diff window), or displays the current
-  S-F10:    Read the previous revision as F10 does
-  A-F10:    Read the original version of the current file from version control
-    F11:    Full log and diff of the revision under the cursor (useful in diff window)
-  S-F11:    Diff of the current file only, revision under the cursor (useful in diff window)
-  A-F11:    Local modifications of the current file
-    F12:    'blame' of the current file
-  S-F12:    'log' of the revision under the cursor (useful in diff window)
-  A-F12:    'blame' with mergeinfo of the current file (implemented for svn)
+NOTE: These mappings are temporarily disabled!
+
+#     F8     Revert of the current file (can be used in diff file too)
+#   S-F8     Update everything to the revision under the cursor
+#     F9     Read the version control log of the current file
+#   S-F9     Read the given revision of the current file
+#    F10     Read the revision under cursor (in diff window), or displays the current
+#  S-F10     Read the previous revision as F10 does
+#  A-F10     Read the original version of the current file from version control
+#    F11     Full log and diff of the revision under the cursor (useful in diff window)
+#  S-F11     Diff of the current file only, revision under the cursor (useful in diff window)
+#  A-F11     Local modifications of the current file
+#    F12     'blame' of the current file
+#  S-F12     'log' of the revision under the cursor (useful in diff window)
+#  A-F12     'blame' with mergeinfo of the current file (implemented for svn)
 
 **** ctags commands ****
 
-  g Ctrl-] Jump where the keyword under the cursor is defined to (:tjump)
-  Ctrl-]   Jump to the definition using keyword under the cursor (:tselect)
-  g]       The same as previous                                  (:tag)
-  [i       Display the first line that contains the keyword under the cursor.
-  ]i       Like "[i", but start at the current cursor position.
-  [I       Display all lines that contain the keyword under the cursor.
-  ]I       Like "[I", but start at the current cursor position.
-  [d       Display the first macro definition that contains the macro under the cursor.
-  ]d       Like "[d", but start at the current cursor position.
+    g Ctrl-] Jump where the keyword under the cursor is defined to (:tjump)
+    Ctrl-]   Jump to the definition using keyword under the cursor (:tselect)
+    g]       The same as previous                                  (:tag)
+    [i       Display the first line that contains the keyword under the cursor.
+    ]i       Like "[i", but start at the current cursor position.
+    [I       Display all lines that contain the keyword under the cursor.
+    ]I       Like "[I", but start at the current cursor position.
+    [d       Display the first macro definition that contains the macro under the cursor.
+    ]d       Like "[d", but start at the current cursor position.
 
 **** cscope commands ****
 
 First character:
-  Ctrl-\ Open in the same window.
-  ;      Open in new window.
+    Ctrl-\  Open in the same window.
+    ;       Open in new window.
 
 Second character:
-  s  Find this C symbol.
-  g  Find this definition.
-  v  Find functions called by this function.
-  c  Find functions calling this function.
-  t  Find this text string.
-  e  Find this egrep pattern.
-  f  Find this file.
-  i  Find files #including the file.
-  j  Find files #including this file.
-  I  Find files #including this file.
-  d  Find the definition using ctags command ":tjump" (same as "Ctrl-w g Ctrl-]").
+    s       Find this C symbol.
+    g       Find this definition.
+    v       Find functions called by this function.
+    c       Find functions calling this function.
+    t       Find this text string.
+    e       Find this egrep pattern.
+    f       Find this file.
+    i       Find files #including the file.
+    j       Find files #including this file.
+    I       Find files #including this file.
+    d       Find the definition using ctags command ":tjump" (same as "Ctrl-w g Ctrl-]").
 
 Second char with <CTRL>: enter commandline
 
 **** HTML commands ****
 
-  ;b    Bold #1:    <b></b>
-  ;B    Bold #2:    <b></b>:<br>
-  ;r    href:       <a href=""></a>
-  ;n    Newline:    <br>
-  ;l    Add an unnumbered list (<ul>...</ul>)
-  ;L    Add an entry for above list (<li>...</li>)
+    ;hb     Bold #1:    <b></b>
+    ;hB     Bold #2:    <b></b>:<br>
+    ;hr     href:       <a href=""></a>
+    ;hn     Newline:    <br>
+    ;hl     Add an unnumbered list (<ul>...</ul>)
+    ;hL     Add an entry for above list (<li>...</li>)
+
+**** Debugging commands ****
+
+      F5    Open new session (requires the executable path)
+    S-F5    Close debug session
+      F8    Toggle gdb terminal (raw output)
+    S-F8    Direct command to gdb
+      F9    Toggle breakpoint at cursor
+  C-S-F9    Clear all breakpoints
+    S-F9    Evaluate expression under cursor
+    C-F9    Continue
+     F10    Step over
+     F11    Step in
+   S-F11    Step out
 
 EOF
 
