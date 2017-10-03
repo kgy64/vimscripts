@@ -1,12 +1,12 @@
 Vim script collection for C/C++ development
 -------------------------------------------
 
-Just execute the script 'install.sh' which copies the scripts into the home directory.
+Just execute 'make install' which copies the scripts into the home directory.
 The vim and gvim will use the new features from this point.
 Note: the old vim and gvim scripts will be overwritten!
                                    --------------------
 
-It use ctags and cscope in a combined way to source completion.
+It uses ctags and cscope in a combined way for source completion.
 Handles diff output directly (e.g. you can jump to the original code by pressing '\g').
 
 Press F2 button for specific help about all key combinations.
