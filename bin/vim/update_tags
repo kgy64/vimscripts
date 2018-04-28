@@ -36,7 +36,8 @@ then
                     echo "${name:1}" >>cscope.dirs
                 ;;
                 -)
-                    grep -v "^${name:1}" cscope.dirs >$TMPFILE
+                    pattern="$(echo "${name:1}" | sed -e "s/\./\\\\./g" -e "s/*/.*/g" | tr "?" ".")"
+                    grep -v -e "^$pattern" -e "/$pattern" cscope.dirs >$TMPFILE
                     rm cscope.dirs
                     mv $TMPFILE cscope.dirs
                 ;;
@@ -113,7 +114,8 @@ then
         do
             case ${name:0:1} in
                 -)
-                    grep -v "^${name:1}" cscope.files >$TMPFILE
+                    pattern="$(echo "${name:1}" | sed -e "s/\./\\\\./g" -e "s/*/.*/g" | tr "?" ".")"
+                    grep -v -e "^$pattern" -e "/$pattern" cscope.files >$TMPFILE
                     rm cscope.files
                     mv $TMPFILE cscope.files
                 ;;
@@ -145,7 +147,7 @@ fi
 
 # Delete temporaries: --------------
 
-rm -f cscope.files cscope.dirs $TMPFILE
+# rm -f cscope.files cscope.dirs $TMPFILE
 
 exit 0
 
