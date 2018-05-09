@@ -14,7 +14,7 @@ nmap     ;<C-F> :call EnterFile2Search()<CR>
 
 nnoremap ;I     :call IncludeMe()<CR>
 nnoremap ;d     :stjump <C-R>=expand("<cword>")<CR><CR>
-nnoremap ;<C-D> :stjump
+nnoremap ;<C-D> :stjump 
 
 inoremap <S-F2> <C-R>=GetGateName()<CR>
 inoremap <F4>   <C-R>=strftime("%F %R")<CR>
