@@ -31,18 +31,17 @@ map      ;b     :call Call4Bugtracker()<CR>
 map      ;vb    :call Ver_Blame()<CR>
 map      ;vr    :call Ver_Log_Rev()<CR>
 map      ;vR    :call Ver_Revert()<CR>
-map      ;vp    :call Ver_GetPrevRevOfFile()<CR>
 
-" map <A-F12>     :call Ver_Blame_Mergeinfo()<CR>
-" map <A-F11>     :call Ver_LocalDiff()<CR>
-" map <A-F10>     :call Ver_Cat()<CR>
-" map <S-C-F10>   :call Ver_Cat()<CR>
-" map <S-F11>     :call Ver_Diff_Current()<CR>
-" map <S-F9>      :call Ver_GetGivenRevOfFile()<CR>
-" map <S-F8>      :call Ver_UpdateTo()<CR>
-" map <F9>        :call Ver_Log()<CR>
-" map <F11>       :call Ver_Diff_Full()<CR>
-" map <F10>       :call Ver_GetRevOfFile()<CR>
+map      ;vm    :call Ver_Blame_Mergeinfo()<CR>
+map      ;vd    :call Ver_LocalDiff()<CR>
+map      ;vo    :call Ver_Cat()<CR>
+map      ;vl    :call Ver_Diff_Current()<CR>
+map      ;vv    :call Ver_GetGivenRevOfFile()<CR>
+map      ;vu    :call Ver_UpdateTo()<CR>
+map      ;vc    :call Ver_Log()<CR>
+map      ;vf    :call Ver_Diff_Full()<CR>
+map      ;vg    :call Ver_GetRevOfFile()<CR>
+map      ;vp    :call Ver_GetPrevRevOfFile()<CR>
 
 " for vebugger.vim:
 
