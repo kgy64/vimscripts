@@ -4,8 +4,7 @@
 for dir in . $HOME/bin $HOME/bin/vim
 do
     test -x $dir/show_gate_name && {
-        $dir/show_gate_name "$@"
-        exit
+        $dir/show_gate_name "$@" && exit
     }
 done
 
